@@ -6,4 +6,13 @@
     </style>
 
     <style name="Theme.TPFitness" parent="Base.Theme.TPFitness" />
+
+    <style name="My_Bottom_Navigation">
+
+        <item name="android:background">@color/bottom_bar</item>
+        <item name="itemIconTint">@color/black</item>
+        <item name="itemTextColor">@color/black</item>
+
+    </style>
+
 </resources>

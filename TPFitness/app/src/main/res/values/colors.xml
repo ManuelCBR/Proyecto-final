@@ -6,4 +6,5 @@
     <color name="background">#A9C9F0</color>
     <color name="cards">#7D9ABF</color>
     <color name="bottom_bar">#28385E</color>
+    <color name="card_rv">#4F648A</color>
 </resources>
