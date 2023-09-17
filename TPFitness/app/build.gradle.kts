@@ -7,6 +7,10 @@ android {
     namespace = "com.manuel.tpfitness"
     compileSdk = 33
 
+    buildFeatures{
+        viewBinding = true
+    }
+
     defaultConfig {
         applicationId = "com.manuel.tpfitness"
         minSdk = 24
