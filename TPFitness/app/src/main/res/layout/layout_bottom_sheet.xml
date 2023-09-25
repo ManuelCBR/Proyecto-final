@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="40dp"
+        android:layout_marginBottom="15dp"
         android:text="@string/muscle_group"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

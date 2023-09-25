@@ -44,7 +44,7 @@
 29-->/Users/manuelbermudo/Documents/GitHub/Proyecto-final/TPFitness/app/src/main/AndroidManifest.xml:13:9-47
 30        <activity
 30-->/Users/manuelbermudo/Documents/GitHub/Proyecto-final/TPFitness/app/src/main/AndroidManifest.xml:15:9-24:20
-31            android:name="com.manuel.tpfitness.MainActivity"
+31            android:name="com.manuel.tpfitness.ui.MainActivity"
 31-->/Users/manuelbermudo/Documents/GitHub/Proyecto-final/TPFitness/app/src/main/AndroidManifest.xml:16:13-41
 32            android:exported="true"
 32-->/Users/manuelbermudo/Documents/GitHub/Proyecto-final/TPFitness/app/src/main/AndroidManifest.xml:17:13-36
