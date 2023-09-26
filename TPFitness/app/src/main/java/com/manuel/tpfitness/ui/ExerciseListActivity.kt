@@ -11,6 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.manuel.tpfitness.adapter.ExerciseAdapter
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseEntity
+import com.manuel.tpfitness.database.entities.MuscleGroupEntity
 import com.manuel.tpfitness.databinding.ActivityExerciseListBinding
 import com.manuel.tpfitness.databinding.LayoutBottomSheetBinding
 import kotlinx.coroutines.launch
