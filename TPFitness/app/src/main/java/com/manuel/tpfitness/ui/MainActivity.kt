@@ -2,6 +2,7 @@ package com.manuel.tpfitness.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,8 +18,8 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-
     private lateinit var db: TPFitnessDB
+    private var exerciseList: MutableList<ExerciseEntity> = mutableListOf()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,23 +27,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
-        binding.btnExerciseList.setOnClickListener { navigateToWorkoutList() }
-
+        binding.btnExerciseList.setOnClickListener {
+            getExercises(db)
+            navigateToWorkoutList()
+        }
+        Log.e("Damian", exerciseList.toString())
 
     }
-
 
     private fun navigateToWorkoutList() {
         val intent = Intent(this, ExerciseListActivity::class.java)
         startActivity(intent)
     }
-
-    private fun getExercises(room: TPFitnessDB) {
-        //lifecycleScope.launch { exerciseList = room.exerciseDao().getExercises() }
+    private fun getExercises(room: TPFitnessDB){
+        Log.e("Damian", "Entré a la funcion exercise")
+        var lista = lifecycleScope.launch { exerciseList = room.exerciseDao().getExercises() }
+        Log.e("Damian", exerciseList.toString())
     }
-
-
-
-
 
 }

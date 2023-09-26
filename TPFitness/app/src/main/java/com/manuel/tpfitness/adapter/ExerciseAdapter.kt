@@ -18,10 +18,7 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
         init {
             exerciseName = itemView.findViewById(R.id.tvExerciseName)
         }
-    /*val exercise = view.findViewById<TextView>(R.id.tvExerciseName)
-    fun render (exerciseEntity: ExerciseEntity){
-        exercise.text = exerciseEntity.nameExercise
-    }*/
+
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExerciseViewHolder {
         var layoutInflater = LayoutInflater.from(parent.context).inflate(R.layout.item_rv_exercise, parent, false)

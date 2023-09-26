@@ -43,6 +43,17 @@ abstract class TPFitnessDB: RoomDatabase() {
                             "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral medial"))
                         TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Press Banca Inclinada",
                             "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+                        TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Press Banca Declinada",
+                            "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+                        TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Fondos paralelas",
+                            "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+                        TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Aperturas Ascendentes",
+                            "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+                        TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Aperturas Descendentes",
+                            "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+                        TPFitnessDB.db.exerciseDao().addExercise(ExerciseEntity(0,"Apertura Neutra",
+                            "Empujes tanto con barra como con mancuernas o en máquina para trabajar el pectoral superior"))
+
                     }
                 }
             }

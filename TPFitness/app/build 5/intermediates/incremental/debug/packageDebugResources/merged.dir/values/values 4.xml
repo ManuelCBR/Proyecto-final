@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="background">#A9C9F0</color>
+    <color name="black">#FF000000</color>
+    <color name="bottom_bar">#28385E</color>
+    <color name="card_rv">#4F648A</color>
+    <color name="cards">#7D9ABF</color>
+    <color name="white">#FFFFFFFF</color>
+    <string name="abs">Abdominales</string>
+    <string name="add_exercise">Añadir ejercicio</string>
+    <string name="add_workout">Añadir entrenamiento</string>
+    <string name="app_name">TPFitness</string>
+    <string name="arms">Brazos</string>
+    <string name="back">Espalda</string>
+    <string name="chest">Pectorales</string>
+    <string name="edit">Editar</string>
+    <string name="exercise_list">Lista de ejercicios</string>
+    <string name="history">Historial</string>
+    <string name="home">Inicio</string>
+    <string name="legs">Piernas</string>
+    <string name="muscle_group">Grupos musculares</string>
+    <string name="save">Guardar</string>
+    <string name="shoulders">Hombros</string>
+    <string name="welcome_text">Bienvenido/a a Trainning Progression</string>
+    <string name="workout">Ejercicio</string>
+    <string name="workout_description">Descripción del ejercicio</string>
+    <style name="Base.Theme.TPFitness" parent="Theme.Material3.DayNight.NoActionBar">
+        
+        
+    </style>
+    <style name="My_Bottom_Navigation">
+
+        <item name="android:background">@color/bottom_bar</item>
+        <item name="itemIconTint">@color/black</item>
+        <item name="itemTextColor">@color/black</item>
+
+    </style>
+    <style name="Theme.TPFitness" parent="Base.Theme.TPFitness"/>
+</resources>
