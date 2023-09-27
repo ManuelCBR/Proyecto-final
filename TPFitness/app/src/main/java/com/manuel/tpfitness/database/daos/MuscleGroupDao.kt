@@ -13,7 +13,6 @@ interface MuscleGroupDao {
     @Query("SELECT * FROM grupos_musculares WHERE id_muscle_group=:id")
     suspend fun getMuscleGroupById(id: Int): MuscleGroupEntity
 
-
     @Insert
     suspend fun addMuscleGroup(muscleGruop: MuscleGroupEntity)
 
