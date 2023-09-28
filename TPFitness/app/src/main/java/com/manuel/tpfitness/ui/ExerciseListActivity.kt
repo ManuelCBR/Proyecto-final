@@ -11,7 +11,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.manuel.tpfitness.adapter.ExerciseAdapter
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseEntity
-import com.manuel.tpfitness.database.entities.MuscleGroupEntity
+import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
 import com.manuel.tpfitness.databinding.ActivityExerciseListBinding
 import com.manuel.tpfitness.databinding.LayoutBottomSheetBinding
 import kotlinx.coroutines.launch
@@ -19,23 +19,26 @@ import kotlinx.coroutines.launch
 class ExerciseListActivity : AppCompatActivity() {
     private lateinit var binding: ActivityExerciseListBinding
     private var exerciseList: MutableList<ExerciseEntity> = mutableListOf()
+    private var exerciseMuscleList: MutableList<ExerciseMuscleEntity> = mutableListOf()
     private lateinit var adapter: ExerciseAdapter
-
-
     private lateinit var db: TPFitnessDB
     private lateinit var rv: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityExerciseListBinding.inflate(layoutInflater)
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
-        getExercises(db)
-        setAdapter()
+
+
+        Log.e("Manuel", getExercises(db).toString())
 
         binding.btnMuscleGroups.setOnClickListener { showBottomSheet() }
         binding.btnAddExercise.setOnClickListener { navigateToExercise() }
         binding.iBtnBack.setOnClickListener { navigateToBack() }
+        getExercises(db)
+        setAdapter()
     }
 
     //Funcion para mostrar el bottom sheet
@@ -43,7 +46,6 @@ class ExerciseListActivity : AppCompatActivity() {
 
         val bottomSheetBinding = LayoutBottomSheetBinding.inflate(layoutInflater)
         val bottomSheetView = bottomSheetBinding.root
-
         val dialog = BottomSheetDialog(this)
         dialog.setContentView(bottomSheetView)
         dialog.show()
@@ -52,7 +54,7 @@ class ExerciseListActivity : AppCompatActivity() {
 
     //Funcion para ir al listado de ejercicios
     private fun navigateToExercise(){
-        val intent = Intent(this, WorkoutActivity::class.java)
+        val intent = Intent(this, ExerciseActivity::class.java)
         startActivity(intent)
     }
 
@@ -66,15 +68,16 @@ class ExerciseListActivity : AppCompatActivity() {
     private fun setAdapter(){
         rv = binding.rvExercise
         rv.layoutManager = LinearLayoutManager(this)
-        rv.adapter = ExerciseAdapter(this, exerciseList)
+        rv.adapter = ExerciseAdapter(this, exerciseMuscleList)
     }
 
     //Funcion para obtener los ejercicios deseados
     private fun getExercises(room: TPFitnessDB){
-        lifecycleScope.launch {
-            exerciseList = room.exerciseDao().getExercises()
-            adapter = ExerciseAdapter(this@ExerciseListActivity, exerciseList)
-            binding.rvExercise.adapter =adapter
+        val bottomSheetBinding = LayoutBottomSheetBinding.inflate(layoutInflater)
+                lifecycleScope.launch {
+                    exerciseMuscleList = room.exerciseMuscleDao().getAllFromExerciseMuscle()
+                    adapter = ExerciseAdapter(this@ExerciseListActivity, exerciseMuscleList)
+                    binding.rvExercise.adapter =adapter
         }
     }
 }

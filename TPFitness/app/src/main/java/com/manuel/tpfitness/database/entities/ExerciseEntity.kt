@@ -1,5 +1,7 @@
 package com.manuel.tpfitness.database.entities
 
+import android.os.Parcel
+import android.os.Parcelable
 import androidx.room.*
 
 @Entity (
@@ -18,7 +20,7 @@ import androidx.room.*
     ]
 
 )
-data class ExerciseEntity(
+data class ExerciseEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo (name = "id_exercise") val idExercise: Int,
     @ColumnInfo (name = "name_exercise") val nameExercise: String,

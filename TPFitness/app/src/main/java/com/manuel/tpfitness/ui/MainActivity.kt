@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.manuel.tpfitness.adapter.ExerciseAdapter
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseEntity
+import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
 import com.manuel.tpfitness.databinding.ActivityExerciseListBinding
 import com.manuel.tpfitness.databinding.ActivityMainBinding
 import kotlinx.coroutines.launch
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity() {
             getExercises(db)
             navigateToWorkoutList()
         }
-        Log.e("Damian", exerciseList.toString())
 
     }
 
@@ -40,9 +40,9 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
     private fun getExercises(room: TPFitnessDB){
-        Log.e("Damian", "Entré a la funcion exercise")
-        var lista = lifecycleScope.launch { exerciseList = room.exerciseDao().getExercises() }
-        Log.e("Damian", exerciseList.toString())
+
+        lifecycleScope.launch { exerciseList = room.exerciseDao().getExercises() }
+
     }
 
 }

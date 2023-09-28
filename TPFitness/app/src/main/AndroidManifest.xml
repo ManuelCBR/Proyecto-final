@@ -16,7 +16,7 @@
             android:name=".ui.ExerciseListActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.WorkoutActivity"
+            android:name=".ui.ExerciseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.MainActivity"

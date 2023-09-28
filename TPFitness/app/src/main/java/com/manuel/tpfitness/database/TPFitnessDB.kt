@@ -6,6 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.manuel.tpfitness.database.daos.ExerciseDao
+import com.manuel.tpfitness.database.daos.ExerciseMuscleDao
 import com.manuel.tpfitness.database.daos.MuscleGroupDao
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
@@ -21,6 +22,7 @@ import kotlinx.coroutines.withContext
 abstract class TPFitnessDB : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleGroupDao(): MuscleGroupDao
+    abstract fun exerciseMuscleDao(): ExerciseMuscleDao
 
     companion object {
         private lateinit var db: TPFitnessDB

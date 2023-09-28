@@ -11,7 +11,8 @@ interface ExerciseDao {
 
     @Query("SELECT * FROM ejercicios")
     suspend fun getExercises(): MutableList<ExerciseEntity>
-
+    @Query("SELECT * FROM ejercicios WHERE id_muscle_group_table=:id")
+    suspend fun getExerciseById(id: Int): MutableList<ExerciseEntity>
     @Insert
     suspend fun addExercise(exercise: ExerciseEntity)
 

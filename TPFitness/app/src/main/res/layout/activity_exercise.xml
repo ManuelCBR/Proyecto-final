@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background"
-    tools:context=".ui.WorkoutActivity">
+    tools:context=".ui.ExerciseActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/consLayoutUp"
@@ -55,7 +55,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilWorkoutName"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="wrap_content"
         app:boxBackgroundColor="@color/cards"
         app:layout_constraintBottom_toTopOf="@+id/btnMuscleGroups"
         app:layout_constraintEnd_toEndOf="parent"
@@ -63,11 +63,13 @@
         app:layout_constraintTop_toBottomOf="@+id/consLayoutUp">
 
         <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etWorkoutName"
+            android:id="@+id/etWorkoutname"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textColor="@color/black"
-            android:tooltipText="Nombre del ejercicio" />
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:textColor="@color/black" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -99,7 +101,7 @@
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilDescriptionWorkout"
         android:layout_width="300dp"
-        android:layout_height="150dp"
+        android:layout_height="250dp"
         app:boxBackgroundColor="@color/cards"
         app:layout_constraintBottom_toTopOf="@+id/btnSave"
         app:layout_constraintEnd_toEndOf="parent"
@@ -111,6 +113,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:textColor="@color/black"
+            android:layout_margin="0dp"
+            android:gravity="top"
+            android:textSize="12sp"
             android:textStyle="bold"
             android:tooltipText="Nombre del ejercicio" />
 
