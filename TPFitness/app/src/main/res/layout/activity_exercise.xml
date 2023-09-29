@@ -57,7 +57,7 @@
         android:layout_width="300dp"
         android:layout_height="wrap_content"
         app:boxBackgroundColor="@color/cards"
-        app:layout_constraintBottom_toTopOf="@+id/btnMuscleGroups"
+        app:layout_constraintBottom_toTopOf="@+id/spinnerMuscleGroup"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/consLayoutUp">
@@ -74,14 +74,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
 
-    <androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnMuscleGroups"
+    <Spinner
+        android:id="@+id/spinnerMuscleGroup"
         android:layout_width="300dp"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:background="@drawable/rounded_shape"
         android:backgroundTint="@color/card_rv"
-        android:text="@string/muscle_group"
-        android:textColor="@color/white"
+        android:textAlignment="center"
         app:layout_constraintBottom_toTopOf="@id/tvDescription"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -96,7 +95,7 @@
         app:layout_constraintBottom_toTopOf="@id/tilDescriptionWorkout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnMuscleGroups" />
+        app:layout_constraintTop_toBottomOf="@id/spinnerMuscleGroup" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilDescriptionWorkout"

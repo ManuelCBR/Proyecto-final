@@ -46,7 +46,7 @@
     <Spinner
         android:id="@+id/spinnerMuscleGroup"
         android:layout_width="300dp"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:textAlignment="center"
         android:gravity="center"
         android:background="@drawable/rounded_shape"
@@ -55,21 +55,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnAddExercise"/>
-
-    <!--<androidx.appcompat.widget.AppCompatButton
-        android:id="@+id/btnMuscleGroups"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/consLayoutUp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/btnAddExercise"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_shape"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"
-        android:backgroundTint="@color/card_rv"
-        android:text="@string/muscle_group"/>-->
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnAddExercise"
