@@ -1,6 +1,7 @@
 package com.manuel.tpfitness.database.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -13,6 +14,9 @@ interface ExerciseDao {
     suspend fun getExercises(): MutableList<ExerciseEntity>
     @Query("SELECT * FROM ejercicios WHERE id_muscle_group_table=:id")
     suspend fun getExerciseById(id: Int): MutableList<ExerciseEntity>
+    @Query("SELECT id_exercise FROM ejercicios WHERE Upper(name_exercise)=Upper(:name)")
+    suspend fun getNameExercisesById(name: String): Int
+
     @Insert
     suspend fun addExercise(exercise: ExerciseEntity)
 

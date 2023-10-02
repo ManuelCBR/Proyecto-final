@@ -47,7 +47,7 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
     //Funcion para ir al activity añadir ejercicio
     private fun navigateToExercise() {
         val intent = Intent(this, ExerciseActivity::class.java)
-        intent.putExtra("idExercise", "")
+        intent.putExtra("idExercise", 0)
         intent.putExtra("nameExercise", "")
         intent.putExtra("descriptionExercise", "")
         intent.putExtra("muscleGroupExercise", "Grupos Musculares")

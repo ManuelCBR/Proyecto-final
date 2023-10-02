@@ -115,8 +115,7 @@
             android:layout_margin="0dp"
             android:gravity="top"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:tooltipText="Nombre del ejercicio" />
+            android:textStyle="bold" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -132,6 +131,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tilDescriptionWorkout" />
+
+    <TextView
+        android:id="@+id/tvDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Eliminar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnSave"
+        app:layout_constraintBottom_toTopOf="@id/myBottomNavigation"
+        android:textStyle="italic"
+        android:textColor="@color/black"
+        />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/myBottomNavigation"
