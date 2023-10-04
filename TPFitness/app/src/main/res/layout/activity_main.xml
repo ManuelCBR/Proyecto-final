@@ -75,7 +75,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="60dp"
             android:backgroundTint="@color/bottom_bar"
-            android:text="@string/add_workout" />
+            android:text="@string/session" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnExerciseList"

@@ -32,11 +32,19 @@ class MainActivity : AppCompatActivity() {
             getExercises(db)
             navigateToWorkoutList()
         }
+        binding.btnAddWorkout.setOnClickListener {
+            getExercises(db)
+            navigateToSession()
+        }
 
     }
 
     private fun navigateToWorkoutList() {
         val intent = Intent(this, ExerciseListActivity::class.java)
+        startActivity(intent)
+    }
+    private fun navigateToSession(){
+        val intent = Intent(this, SessionActivity::class.java)
         startActivity(intent)
     }
     private fun getExercises(room: TPFitnessDB){

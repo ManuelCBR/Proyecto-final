@@ -13,6 +13,12 @@
         android:theme="@style/Theme.TPFitness"
         tools:targetApi="31">
         <activity
+            android:name=".ui.SerieActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.SessionActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.ExerciseListActivity"
             android:exported="false" />
         <activity

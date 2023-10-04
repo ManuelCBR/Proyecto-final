@@ -40,7 +40,7 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
         mostrar los campos del ejercicio */
         holder.itemView.setOnClickListener {
             val intent = Intent(holder.itemView.context, ExerciseActivity::class.java)
-            intent.putExtra("idExercise", exercise.exercisesTable.idExercise)
+            intent.putExtra("", exercise.exercisesTable.idExercise)
             intent.putExtra("nameExercise", exercise.exercisesTable.nameExercise)
             intent.putExtra("descriptionExercise", exercise.exercisesTable.descriptionExercise)
             intent.putExtra("muscleGroupExercise", exercise.muscleGroupTable.nameMuscleGroup)

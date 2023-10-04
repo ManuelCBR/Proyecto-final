@@ -2,7 +2,7 @@
     <string name="app_name">TPFitness</string>
 
     <string name="welcome_text">Bienvenido/a a Trainning Progression</string>
-    <string name="add_workout">Añadir entrenamiento</string>
+    <string name="session">Añadir Sesión de entrenamiento</string>
     <string name="exercise_list">Lista de ejercicios</string>
     <string name="add_exercise">Añadir ejercicio</string>
     <string name="home">Inicio</string>
@@ -12,6 +12,11 @@
     <string name="muscle_group">Grupos musculares</string>
     <string name="workout_description">Descripción del ejercicio</string>
     <string name="save">Guardar</string>
+    <string name="fill_fields">Rellena los campos</string>
+    <string name="serie">Serie</string>
+    <string name="kg">Kg</string>
+    <string name="reps">Reps</string>
+    <string name="add_serie">Añadir serie</string>
 
     <!--Strings bottom sheets-->
     <string name="chest">Pectorales</string>

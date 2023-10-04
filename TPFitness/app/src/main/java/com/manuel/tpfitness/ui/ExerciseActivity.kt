@@ -70,11 +70,17 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             //Se muestra el botón para eliminar el ejercicio
             binding.tvDelete.isShown
             //Se establece la funcionalidad para actualizar un ejercicio existente
-            binding.btnSave.setOnClickListener { updateExercise(db, idExtra) }
+            binding.btnSave.setOnClickListener {
+                if(nameExtra == "" || descriptionExtra == "" || itemSelected == 0) {
+                    Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show()
+                }else updateExercise(db, idExtra)
+            }
 
         }
         //Se establece la funcionalidad para guardar el ejercicio nuevo
-        binding.btnSave.setOnClickListener { saveNewExercise(db)}
+        binding.btnSave.setOnClickListener {
+            saveNewExercise(db)
+        }
 
         //Se establece la funcionalidad para eliminar un ejercicio
         binding.tvDelete.setOnClickListener {
@@ -121,19 +127,31 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         val name = binding.etWorkoutname.text.toString()
         val description = binding.etDescriptionWorkout.text.toString()
 
-        lifecycleScope.launch {
-            if (room.exerciseDao().getNameExercisesById(name) > 0) {
-                Toast.makeText(
-                    this@ExerciseActivity,
-                    "Este ejercicio ya existe",
-                    Toast.LENGTH_SHORT
-                ).show()
-            } else {
-                room.exerciseDao().addExercise(ExerciseEntity(0, name, description, itemSelected))
-                Toast.makeText(this@ExerciseActivity, "Ejercicio guardado correctmente", Toast.LENGTH_SHORT).show()
+        /*Se controla que si el usuario intenta guardar un ejercicio sin nombre, descripción o grupo muscular
+        que salte un Toast avisandole que tiene que rellenar todos los campos*/
+        if (name == "" || description == "" || itemSelected == 0){
+            Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show()
+        }else {
+            lifecycleScope.launch {
+                if (room.exerciseDao().getNameExercisesById(name) > 0) {
+                    Toast.makeText(
+                        this@ExerciseActivity,
+                        "Este ejercicio ya existe",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                } else {
+                    room.exerciseDao()
+                        .addExercise(ExerciseEntity(0, name, description, itemSelected))
+                    Toast.makeText(
+                        this@ExerciseActivity,
+                        "Ejercicio guardado correctmente",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
+            navigateToBack()
         }
-        navigateToBack()
+
     }
     private fun deleteExercise(room: TPFitnessDB, id: Int){
         lifecycleScope.launch {
