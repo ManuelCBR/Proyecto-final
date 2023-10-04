@@ -8,6 +8,8 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.manuel.tpfitness.database.daos.ExerciseDao
 import com.manuel.tpfitness.database.daos.ExerciseMuscleDao
 import com.manuel.tpfitness.database.daos.MuscleGroupDao
+import com.manuel.tpfitness.database.daos.SeriesDao
+import com.manuel.tpfitness.database.daos.SessionDao
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
 import kotlinx.coroutines.Dispatchers
@@ -23,6 +25,8 @@ abstract class TPFitnessDB : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleGroupDao(): MuscleGroupDao
     abstract fun exerciseMuscleDao(): ExerciseMuscleDao
+    abstract fun sessionDao(): SessionDao
+    abstract fun seriesDao(): SeriesDao
 
     companion object {
         private lateinit var db: TPFitnessDB
