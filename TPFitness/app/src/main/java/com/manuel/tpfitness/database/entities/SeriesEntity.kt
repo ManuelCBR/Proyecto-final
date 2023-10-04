@@ -9,8 +9,10 @@ import androidx.room.PrimaryKey
 )
 data class SeriesEntity (
     //ESTABLECER PK Y FK COMPUESTAS
+
     @ColumnInfo(name = "id_session") val idSession: Int,
     @ColumnInfo(name = "id_exercise") val idExercise: Int,
+    @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id_serie") val idSerie: Int,
     @ColumnInfo(name = "weight") val weight: Int,
     @ColumnInfo(name = "reps") val reps: Int

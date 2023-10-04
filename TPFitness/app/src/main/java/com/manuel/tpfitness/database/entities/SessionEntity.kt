@@ -6,10 +6,7 @@ import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
-    tableName = "entrenamientos",
-    indices = [
-        Index(value = ["id_session"], unique = true)
-    ]
+    tableName = "entrenamientos"
 )
 data class SessionEntity (
     @PrimaryKey (autoGenerate = true)
