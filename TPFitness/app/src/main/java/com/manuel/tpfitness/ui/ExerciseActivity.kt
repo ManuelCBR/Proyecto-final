@@ -1,16 +1,15 @@
 package com.manuel.tpfitness.ui
 
-import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
+import com.manuel.tpfitness.R
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.databinding.ActivityExerciseBinding
@@ -51,11 +50,11 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             fieldsEnabled()
             binding.tvDelete.visibility = View.GONE
             lifecycleScope.launch {
-            adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
+                adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
             }
         } else fieldsNotEnabled()
         //Boton atras
-        binding.iBtnBack.setOnClickListener{navigateToBack()}
+        binding.iBtnBack.setOnClickListener{goToExerciseList()}
         //Se añade la funcionalidad para que esten los campos bloqueados hasta que se clicke en edit
         binding.tvEdit.setOnClickListener {
             //Se habilitan los campos para que el usuario pueda editar el ejercicio
@@ -92,30 +91,30 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                 Toast.makeText(this, "Ejercicio Eliminado", Toast.LENGTH_SHORT).show()
             }
             alert.setNegativeButton("No"){dialog, witch ->
-                navigateToBack()
+                goToExerciseList()
             }
             val dialog: AlertDialog = alert.create()
             dialog.show()
 
         }
     }
-
-    private fun navigateToBack() {
+    private fun goToExerciseList(){
         val intent = Intent(this, ExerciseListActivity::class.java)
         startActivity(intent)
     }
+
     private fun fieldsNotEnabled(){
         binding.etWorkoutname.isEnabled = false
         binding.etDescriptionWorkout.isEnabled = false
         binding.spinnerMuscleGroup.isEnabled = false
-        binding.btnSave.isEnabled = false
+        binding.btnSave.visibility = View.INVISIBLE
         binding.tvDelete.visibility = View.GONE
     }
     private fun fieldsEnabled(){
         binding.etWorkoutname.isEnabled = true
         binding.etDescriptionWorkout.isEnabled = true
         binding.spinnerMuscleGroup.isEnabled = true
-        binding.btnSave.isEnabled = true
+        binding.btnSave.visibility = View.VISIBLE
         binding.tvDelete.visibility = View.VISIBLE
     }
     private fun addFields(fieldName: String?, fieldDescription: String?, fieldBtn: String?){
@@ -149,24 +148,25 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                     ).show()
                 }
             }
-            navigateToBack()
+
         }
+        goToExerciseList()
 
     }
     private fun deleteExercise(room: TPFitnessDB, id: Int){
         lifecycleScope.launch {
             room.exerciseDao().delExercise(id)
         }
-        navigateToBack()
+        goToExerciseList()
     }
     private fun updateExercise(room: TPFitnessDB, id: Int){
         val name = binding.etWorkoutname.text.toString()
         val description = binding.etDescriptionWorkout.text.toString()
         lifecycleScope.launch {
-                room.exerciseDao().updateExercise(ExerciseEntity(id, name, description, itemSelected))
-                Toast.makeText(this@ExerciseActivity, "Ejercicio modificado correctmente", Toast.LENGTH_SHORT).show()
+            room.exerciseDao().updateExercise(ExerciseEntity(id, name, description, itemSelected))
+            Toast.makeText(this@ExerciseActivity, "Ejercicio modificado correctmente", Toast.LENGTH_SHORT).show()
         }
-        navigateToBack()
+        goToExerciseList()
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

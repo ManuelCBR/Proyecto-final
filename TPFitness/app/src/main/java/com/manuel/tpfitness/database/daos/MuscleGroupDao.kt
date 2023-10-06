@@ -3,7 +3,6 @@ package com.manuel.tpfitness.database.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
 
 @Dao

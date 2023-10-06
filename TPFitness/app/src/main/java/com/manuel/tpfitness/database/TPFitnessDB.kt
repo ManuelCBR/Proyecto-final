@@ -8,27 +8,21 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.manuel.tpfitness.database.daos.ExerciseDao
 import com.manuel.tpfitness.database.daos.ExerciseMuscleDao
 import com.manuel.tpfitness.database.daos.MuscleGroupDao
-import com.manuel.tpfitness.database.daos.SeriesDao
-import com.manuel.tpfitness.database.daos.SessionDao
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
-import com.manuel.tpfitness.database.entities.SeriesEntity
-import com.manuel.tpfitness.database.entities.SessionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [ExerciseEntity::class, MuscleGroupEntity::class, SessionEntity::class, SeriesEntity::class],
+    entities = [ExerciseEntity::class, MuscleGroupEntity::class],
     version = 1
 )
-abstract class TPFitnessDB : RoomDatabase() {
+abstract class TPFitnessDB: RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleGroupDao(): MuscleGroupDao
     abstract fun exerciseMuscleDao(): ExerciseMuscleDao
-    abstract fun sessionDao(): SessionDao
-    abstract fun seriesDao(): SeriesDao
 
     companion object {
         private lateinit var db: TPFitnessDB
@@ -47,7 +41,7 @@ abstract class TPFitnessDB : RoomDatabase() {
         }
 
         //Callback para precargar todos los datos mínimos que debe tener la aplicacion para que el usuario no se la encuentre vacia
-        private val callback: Callback = object : Callback() {
+        private val callback: RoomDatabase.Callback = object : RoomDatabase.Callback() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
                 GlobalScope.launch {

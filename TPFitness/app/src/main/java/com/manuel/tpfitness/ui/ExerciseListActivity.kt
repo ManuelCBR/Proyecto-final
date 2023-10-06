@@ -29,7 +29,7 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
         binding.btnAddExercise.setOnClickListener { navigateToExercise() }
-        binding.iBtnBack.setOnClickListener { navigateToBack() }
+        binding.iBtnBack.setOnClickListener { onBackPressed() }
         val adapterSpinner = ArrayAdapter<String>(
             this,R.layout.spinner_items
         )
@@ -55,17 +55,12 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         startActivity(intent)
     }
 
-    //Funcion para volver al activity anterior
-    private fun navigateToBack() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
-    }
-
     //Funcion para establecer el adaptador
     private fun setAdapter() {
         rv = binding.rvExercise
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = ExerciseAdapter(this, exerciseMuscleList)
+
     }
 
     //Funcion para obtener los ejercicios deseados
@@ -98,7 +93,6 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
 
     override fun onNothingSelected(p0: AdapterView<*>?) {
 
-        getExercises(db)
     }
 
 }

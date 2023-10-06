@@ -5,12 +5,13 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.CheckBox
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.manuel.tpfitness.R
 import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
 import com.manuel.tpfitness.ui.ExerciseActivity
+import com.manuel.tpfitness.ui.MainActivity
+import com.manuel.tpfitness.ui.SerieActivity
 
 class ExerciseAdapter(var context: Context, var exerciseList: MutableList<ExerciseMuscleEntity>) :
     RecyclerView.Adapter<ExerciseAdapter.ExerciseViewHolder>() {
@@ -33,19 +34,26 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
     }
 
     override fun onBindViewHolder(holder: ExerciseViewHolder, position: Int) {
-        val exercise = exerciseList[position]//Cambiado
-        holder.exerciseName.text = exercise.exercisesTable.nameExercise//Cambiado
+        val exercise = exerciseList[position]
+        holder.exerciseName.text = exercise.exercisesTable.nameExercise
 
         /* SetOnClick para que cuando cliquemos en un cardview de un recycleview pase a la activity ExerciseActivity para
         mostrar los campos del ejercicio */
-        holder.itemView.setOnClickListener {
-            val intent = Intent(holder.itemView.context, ExerciseActivity::class.java)
-            intent.putExtra("", exercise.exercisesTable.idExercise)
-            intent.putExtra("nameExercise", exercise.exercisesTable.nameExercise)
-            intent.putExtra("descriptionExercise", exercise.exercisesTable.descriptionExercise)
-            intent.putExtra("muscleGroupExercise", exercise.muscleGroupTable.nameMuscleGroup)
+        if (MainActivity.origin == "session") {
+            holder.itemView.setOnClickListener {
+                val intent = Intent(holder.itemView.context, ExerciseActivity::class.java)
+                intent.putExtra("idExercise", exercise.exercisesTable.idExercise)
+                intent.putExtra("nameExercise", exercise.exercisesTable.nameExercise)
+                intent.putExtra("descriptionExercise", exercise.exercisesTable.descriptionExercise)
+                intent.putExtra("muscleGroupExercise", exercise.muscleGroupTable.nameMuscleGroup)
 
-            context.startActivity(intent)
+                context.startActivity(intent)
+            }
+        }else if (MainActivity.origin == "exercises"){
+            holder.itemView.setOnClickListener {
+                val intent = Intent(holder.itemView.context, SerieActivity::class.java)
+                context.startActivity(intent)
+            }
         }
 
 

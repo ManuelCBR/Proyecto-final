@@ -1,6 +1,5 @@
 package com.manuel.tpfitness.ui
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -17,7 +16,6 @@ import com.manuel.tpfitness.databinding.ActivitySessionBinding
 import kotlinx.coroutines.launch
 
 class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
-
     private lateinit var binding: ActivitySessionBinding
     private var exerciseMuscleList: MutableList<ExerciseMuscleEntity> = mutableListOf()
     private lateinit var adapter: ExerciseAdapter
@@ -33,18 +31,13 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         )
         binding.spinnerMuscleGroup.adapter = adapterSpinner
         binding.spinnerMuscleGroup.onItemSelectedListener = this
-        binding.iBtnBack.setOnClickListener { navigateToBack() }
+        binding.iBtnBack.setOnClickListener { onBackPressed() }
         lifecycleScope.launch {
             adapterSpinner.add("Todos los Grupos Musculares")
             adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
         }
         getExercises(db)
         setAdapter()
-    }
-    //Funcion para volver al activity anterior y eliminar la sesion
-    private fun navigateToBack() {
-        val intent = Intent(this, MainActivity::class.java)
-        startActivity(intent)
     }
     private fun setAdapter() {
         rv = binding.rvExercise

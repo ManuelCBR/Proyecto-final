@@ -1,10 +1,8 @@
 package com.manuel.tpfitness.database.daos
 
-import android.widget.ArrayAdapter
 import androidx.room.Dao
 import androidx.room.Query
 import androidx.room.Transaction
-import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
 
 @Dao
