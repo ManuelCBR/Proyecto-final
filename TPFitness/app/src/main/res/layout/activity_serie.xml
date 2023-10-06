@@ -147,17 +147,17 @@
         android:id="@+id/btnAddSerie"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/scrollSeries"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/tvDelSerie"
-        android:textColor="@color/white"
-        android:background="@drawable/rounded_shape"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:background="@drawable/rounded_shape"
         android:backgroundTint="@color/card_rv"
-        android:text="@string/add_serie"/>
+        android:text="@string/add_serie"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/tvDelSerie"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scrollSeries" />
 
     <TextView
         android:id="@+id/tvDelSerie"

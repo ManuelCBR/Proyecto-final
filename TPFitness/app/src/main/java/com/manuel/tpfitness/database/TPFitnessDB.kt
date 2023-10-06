@@ -10,13 +10,14 @@ import com.manuel.tpfitness.database.daos.ExerciseMuscleDao
 import com.manuel.tpfitness.database.daos.MuscleGroupDao
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
+import com.manuel.tpfitness.database.entities.SessionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [ExerciseEntity::class, MuscleGroupEntity::class],
+    entities = [ExerciseEntity::class, MuscleGroupEntity::class, SessionEntity::class],
     version = 1
 )
 abstract class TPFitnessDB: RoomDatabase() {

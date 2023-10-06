@@ -20,8 +20,9 @@ import com.manuel.tpfitness.databinding.ActivitySerieBinding
 class SerieActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySerieBinding
     private lateinit var cardContainer: LinearLayout
-    private var cardViewCounter = 1
+    private var cardViewCounter = 0
     val cardViewsList = mutableListOf<CardView>()
+    private lateinit var tvSerie: TextView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,7 +35,9 @@ class SerieActivity : AppCompatActivity() {
         binding.tvDelSerie.setOnClickListener { delSeries() }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
 
-        getCardViewSerie(0)
+        binding.tvSave.setOnClickListener { setCardViewSerie() }
+
+
 
     }
 
@@ -55,12 +58,13 @@ class SerieActivity : AppCompatActivity() {
             LayoutInflater.from(this).inflate(R.layout.item_cv_series, null, false) as ViewGroup
         //Se agrega la vista al card
         cardView.addView(customCardContent)
-        val tvSerie = cardView.findViewById<TextView>(R.id.tvSerie)
-        tvSerie.setText(cardViewCounter.toString())
+        tvSerie = cardView.findViewById(R.id.tvCvSerie)
+        tvSerie.setText((cardViewCounter + 1).toString())
         //Se agrega la card al container (layout)
         cardContainer = findViewById(R.id.containerSeries)
         cardContainer.addView(cardView)
         cardViewsList.add(cardView)
+
         cardViewCounter++
         cardView.id
 
@@ -78,19 +82,26 @@ class SerieActivity : AppCompatActivity() {
             val lastChild = cardContainer.getChildAt(childCount - 1)
             if (lastChild is CardView) cardContainer.removeView(lastChild)
         }
+        cardViewCounter--
 
     }
-    private fun getCardViewSerie(idCardView: Int){
+    private fun setCardViewSerie(){
 
-        val cardView = cardViewsList[idCardView]
-        val etKg = cardView.findViewById<EditText>(R.id.etKg)
-        etKg.inputType = InputType.TYPE_CLASS_NUMBER
-        val etReps = cardView.findViewById<EditText>(R.id.etReps)
-        etReps.inputType = InputType.TYPE_CLASS_NUMBER
-        val valueKg = etKg.text.toString()
-        val valueReps = etReps.text.toString()
+        for(item in cardViewsList){
+            val cardView = item
+            val etKg = cardView.findViewById<EditText>(R.id.etKg)
+            val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+            etKg.inputType = InputType.TYPE_CLASS_NUMBER
+            val etReps = cardView.findViewById<EditText>(R.id.etReps)
+            etReps.inputType = InputType.TYPE_CLASS_NUMBER
+            //Valores de la serie
+            val idSerie = tvSerie.text
+            val valueKg = etKg.text.toString()
+            val valueReps = etReps.text.toString()
+            Log.e("Values", idSerie.toString() + "|" + valueKg + "|" + valueReps)
+        }
 
-        Log.e("Valor", valueKg)
-        Log.e("Valor", valueReps)
+
+
     }
 }

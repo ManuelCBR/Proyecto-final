@@ -16,7 +16,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/tvSerie"
+            android:id="@+id/tvCvSerie"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:hint="-"
@@ -39,7 +39,7 @@
             android:textColorHint="@color/black"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/etReps"
-            app:layout_constraintStart_toEndOf="@id/tvSerie"
+            app:layout_constraintStart_toEndOf="@id/tvCvSerie"
             app:layout_constraintTop_toTopOf="parent" />
 
         <androidx.appcompat.widget.AppCompatEditText

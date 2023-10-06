@@ -43,6 +43,10 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         setAdapter()
 
     }
+    private fun goToHome(){
+        val intent = Intent(this, MainActivity::class.java)
+        startActivity(intent)
+    }
 
     //Funcion para ir al activity añadir ejercicio
     private fun navigateToExercise() {
