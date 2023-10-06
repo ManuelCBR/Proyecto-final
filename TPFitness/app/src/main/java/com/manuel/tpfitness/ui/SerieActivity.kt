@@ -91,13 +91,11 @@ class SerieActivity : AppCompatActivity() {
             val cardView = item
             val etKg = cardView.findViewById<EditText>(R.id.etKg)
             val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
-            etKg.inputType = InputType.TYPE_CLASS_NUMBER
             val etReps = cardView.findViewById<EditText>(R.id.etReps)
-            etReps.inputType = InputType.TYPE_CLASS_NUMBER
             //Valores de la serie
             val idSerie = tvSerie.text
-            val valueKg = etKg.text.toString()
-            val valueReps = etReps.text.toString()
+            val valueKg = etKg.text.toString().toInt()
+            val valueReps = etReps.text.toString().toInt()
             Log.e("Values", idSerie.toString() + "|" + valueKg + "|" + valueReps)
         }
 
