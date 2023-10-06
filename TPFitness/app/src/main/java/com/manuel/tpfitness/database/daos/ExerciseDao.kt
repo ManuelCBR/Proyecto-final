@@ -3,6 +3,7 @@ package com.manuel.tpfitness.database.daos
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
 import com.manuel.tpfitness.database.entities.ExerciseEntity
 

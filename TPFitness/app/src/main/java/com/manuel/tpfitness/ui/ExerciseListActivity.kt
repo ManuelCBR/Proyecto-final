@@ -29,7 +29,7 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
         binding.btnAddExercise.setOnClickListener { navigateToExercise() }
-        binding.iBtnBack.setOnClickListener { onBackPressed() }
+        binding.iBtnBack.setOnClickListener { goToHome() }
         val adapterSpinner = ArrayAdapter<String>(
             this,R.layout.spinner_items
         )

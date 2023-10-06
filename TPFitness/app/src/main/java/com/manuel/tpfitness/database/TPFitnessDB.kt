@@ -7,9 +7,14 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.manuel.tpfitness.database.daos.ExerciseDao
 import com.manuel.tpfitness.database.daos.ExerciseMuscleDao
+import com.manuel.tpfitness.database.daos.ExercisesSessionDao
 import com.manuel.tpfitness.database.daos.MuscleGroupDao
+import com.manuel.tpfitness.database.daos.SeriesDao
+import com.manuel.tpfitness.database.daos.SessionDao
 import com.manuel.tpfitness.database.entities.ExerciseEntity
+import com.manuel.tpfitness.database.entities.ExercisesSessionEntity
 import com.manuel.tpfitness.database.entities.MuscleGroupEntity
+import com.manuel.tpfitness.database.entities.SeriesEntity
 import com.manuel.tpfitness.database.entities.SessionEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -17,13 +22,16 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Database(
-    entities = [ExerciseEntity::class, MuscleGroupEntity::class, SessionEntity::class],
+    entities = [ExerciseEntity::class, MuscleGroupEntity::class, SessionEntity::class, ExercisesSessionEntity::class, SeriesEntity::class],
     version = 1
 )
 abstract class TPFitnessDB: RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleGroupDao(): MuscleGroupDao
     abstract fun exerciseMuscleDao(): ExerciseMuscleDao
+    abstract fun sessionDao(): SessionDao
+    abstract fun exercisesSessionDao(): ExercisesSessionDao
+    abstract fun seriesDao(): SeriesDao
 
     companion object {
         private lateinit var db: TPFitnessDB

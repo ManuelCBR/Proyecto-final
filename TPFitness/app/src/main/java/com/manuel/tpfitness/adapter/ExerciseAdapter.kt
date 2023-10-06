@@ -47,6 +47,7 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
                 intent.putExtra("descriptionExercise", exercise.exercisesTable.descriptionExercise)
                 intent.putExtra("muscleGroupExercise", exercise.muscleGroupTable.nameMuscleGroup)
 
+
                 context.startActivity(intent)
             }
         }else if (MainActivity.origin == "exercises"){
