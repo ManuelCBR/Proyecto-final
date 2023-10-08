@@ -2,7 +2,8 @@
     <string name="app_name">TPFitness</string>
 
     <string name="welcome_text">Bienvenido/a a Trainning Progression</string>
-    <string name="session">Añadir Sesión de entrenamiento</string>
+    <string name="session">Sesión</string>
+    <string name="session_btn">Añadir Sesión</string>
     <string name="exercise_list">Lista de ejercicios</string>
     <string name="add_exercise">Añadir ejercicio</string>
     <string name="home">Inicio</string>

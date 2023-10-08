@@ -10,11 +10,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.manuel.tpfitness.R
+import com.manuel.tpfitness.adapter.DatePickerFragment
 import com.manuel.tpfitness.adapter.ExerciseAdapter
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
 import com.manuel.tpfitness.databinding.ActivitySessionBinding
 import kotlinx.coroutines.launch
+import java.time.LocalDate
 
 class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private lateinit var binding: ActivitySessionBinding
@@ -33,6 +35,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         binding.spinnerMuscleGroup.adapter = adapterSpinner
         binding.spinnerMuscleGroup.onItemSelectedListener = this
         binding.iBtnBack.setOnClickListener { onBackPressed() }
+        binding.icDatePicker.setOnClickListener { showDatePicker() }
         lifecycleScope.launch {
             adapterSpinner.add("Todos los Grupos Musculares")
             adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
@@ -78,6 +81,14 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             }
             true
         }
+    }
+    //Funcion para mostrar el date piker
+    private fun showDatePicker(){
+        val datePicker = DatePickerFragment {day, month, year -> selectedDate(day, month, year)}
+        datePicker.show(supportFragmentManager, "datePicker")
+    }
+    private fun selectedDate(day: Int, month: Int, year: Int){
+        //val date = LocalDate.of(year, month, day)
     }
     //Funciones para darle funcionalidad a los items del Spinner
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

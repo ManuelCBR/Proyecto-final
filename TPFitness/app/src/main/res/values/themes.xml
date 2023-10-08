@@ -14,4 +14,12 @@
         <item name="itemTextColor">@color/black</item>
 
     </style>
+
+    <style name="my_date_picker" parent="android:Theme.Material.Light.Dialog">
+
+        <item name="android:colorAccent">@color/cards</item>
+
+    </style>
+
+
 </resources>
