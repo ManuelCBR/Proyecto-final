@@ -3,6 +3,7 @@ package com.manuel.tpfitness.database.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.time.LocalDate
 
 @Entity(tableName = "entrenamiento")
 data class SessionEntity (

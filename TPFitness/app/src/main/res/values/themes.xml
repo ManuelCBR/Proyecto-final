@@ -15,11 +15,11 @@
 
     </style>
 
-    <style name="my_date_picker" parent="android:Theme.Material.Light.Dialog">
+    <!--<style name="my_date_picker" parent="android:Theme.Material.Light.Dialog">
 
         <item name="android:colorAccent">@color/cards</item>
 
-    </style>
+    </style>-->
 
 
 </resources>

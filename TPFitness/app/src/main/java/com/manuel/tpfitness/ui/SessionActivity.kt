@@ -88,7 +88,11 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         datePicker.show(supportFragmentManager, "datePicker")
     }
     private fun selectedDate(day: Int, month: Int, year: Int){
-        //val date = LocalDate.of(year, month, day)
+
+        val monthPlus = month+1
+        val date = "$day-$monthPlus-$year"
+        binding.etSessionName.setText(date)
+
     }
     //Funciones para darle funcionalidad a los items del Spinner
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
