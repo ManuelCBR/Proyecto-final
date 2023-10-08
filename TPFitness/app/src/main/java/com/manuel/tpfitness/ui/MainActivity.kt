@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
             navigateToSession()
             origin = "exercises"
         }
-
+        setFunctionItemsNavigationBar()
     }
 
     private fun navigateToWorkoutList() {
@@ -51,6 +51,22 @@ class MainActivity : AppCompatActivity() {
 
         lifecycleScope.launch { exerciseList = room.exerciseDao().getExercises() }
 
+    }
+    fun setFunctionItemsNavigationBar(){
+        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
+            when (menuItem.itemId){
+                R.id.itm_home -> {
+                    val intent = Intent (this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.itm_history -> {
+                    val intent = Intent (this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+            }
+            true
+        }
     }
 
 }

@@ -1,5 +1,6 @@
 package com.manuel.tpfitness.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.InputType
@@ -73,6 +74,7 @@ class SerieActivity : AppCompatActivity() {
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
         }
+        setFunctionItemsNavigationBar()
 
     }
 
@@ -99,7 +101,22 @@ class SerieActivity : AppCompatActivity() {
             Log.e("Values", idSerie.toString() + "|" + valueKg + "|" + valueReps)
         }
 
+    }
+    //Se establecen las funcionesd de los botones del bottom navigation view
+    fun setFunctionItemsNavigationBar(){
+        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
+            when (menuItem.itemId){
+                R.id.itm_home -> {
+                    val intent = Intent (this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.itm_history -> {
+                    val intent = Intent (this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
 
-
+            }
+            true
+        }
     }
 }

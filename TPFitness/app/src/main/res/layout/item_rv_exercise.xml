@@ -32,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 tools:text="Press Banca"
-                android:gravity="center"
+                android:gravity="start|center_vertical"
                 android:paddingStart="20dp"
                 android:textColorHint="@color/white"
                 android:textColor="@color/white" />

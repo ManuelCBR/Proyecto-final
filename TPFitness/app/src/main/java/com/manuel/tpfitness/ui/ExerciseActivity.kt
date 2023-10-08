@@ -97,6 +97,7 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             dialog.show()
 
         }
+        setFunctionItemsNavigationBar()
     }
     private fun goToExerciseList(){
         val intent = Intent(this, ExerciseListActivity::class.java)
@@ -167,6 +168,22 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             Toast.makeText(this@ExerciseActivity, "Ejercicio modificado correctmente", Toast.LENGTH_SHORT).show()
         }
         goToExerciseList()
+    }
+    fun setFunctionItemsNavigationBar(){
+        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
+            when (menuItem.itemId){
+                R.id.itm_home -> {
+                    val intent = Intent (this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.itm_history -> {
+                    val intent = Intent (this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+            }
+            true
+        }
     }
 
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {

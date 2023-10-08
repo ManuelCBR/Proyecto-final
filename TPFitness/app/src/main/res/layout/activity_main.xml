@@ -90,6 +90,7 @@
     </androidx.cardview.widget.CardView>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/myBottomNavigation"
         style="@style/My_Bottom_Navigation"
         android:layout_width="match_parent"
         android:layout_height="65dp"

@@ -41,6 +41,7 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
         }
         getExercises(db)
         setAdapter()
+        setFunctionItemsNavigationBar()
 
     }
     private fun goToHome(){
@@ -84,6 +85,22 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
             exerciseMuscleList = db.exerciseMuscleDao().getExerciseById(id)
             adapter = ExerciseAdapter(this@ExerciseListActivity, exerciseMuscleList)
             binding.rvExercise.adapter = adapter
+        }
+    }
+    fun setFunctionItemsNavigationBar(){
+        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
+            when (menuItem.itemId){
+                R.id.itm_home -> {
+                    val intent = Intent (this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.itm_history -> {
+                    val intent = Intent (this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+            }
+            true
         }
     }
 

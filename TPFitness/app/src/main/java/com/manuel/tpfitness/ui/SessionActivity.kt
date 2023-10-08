@@ -1,5 +1,6 @@
 package com.manuel.tpfitness.ui
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -38,6 +39,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         }
         getExercises(db)
         setAdapter()
+        setFunctionItemsNavigationBar()
     }
     private fun setAdapter() {
         rv = binding.rvExercise
@@ -58,6 +60,23 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             exerciseMuscleList = db.exerciseMuscleDao().getExerciseById(id)
             adapter = ExerciseAdapter(this@SessionActivity, exerciseMuscleList)
             binding.rvExercise.adapter = adapter
+        }
+    }
+    //Se establecen las funcionesd de los botones del bottom navigation view
+    fun setFunctionItemsNavigationBar(){
+        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
+            when (menuItem.itemId){
+                R.id.itm_home -> {
+                    val intent = Intent (this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                R.id.itm_history -> {
+                    val intent = Intent (this, HistoryActivity::class.java)
+                    startActivity(intent)
+                }
+
+            }
+            true
         }
     }
     //Funciones para darle funcionalidad a los items del Spinner
