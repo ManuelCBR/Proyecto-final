@@ -53,6 +53,7 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
         }else if (MainActivity.origin == "exercises"){
             holder.itemView.setOnClickListener {
                 val intent = Intent(holder.itemView.context, SerieActivity::class.java)
+                intent.putExtra("idExercise", exercise.exercisesTable.idExercise)
                 context.startActivity(intent)
             }
         }

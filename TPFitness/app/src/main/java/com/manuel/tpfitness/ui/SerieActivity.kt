@@ -15,8 +15,15 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.lifecycle.LifecycleCoroutineScope
+import androidx.lifecycle.lifecycleScope
 import com.manuel.tpfitness.R
+import com.manuel.tpfitness.database.TPFitnessDB
+import com.manuel.tpfitness.database.entities.ExercisesSessionEntity
+import com.manuel.tpfitness.database.entities.SeriesEntity
+import com.manuel.tpfitness.database.entities.SessionEntity
 import com.manuel.tpfitness.databinding.ActivitySerieBinding
+import kotlinx.coroutines.launch
 
 class SerieActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySerieBinding
@@ -24,22 +31,32 @@ class SerieActivity : AppCompatActivity() {
     private var cardViewCounter = 0
     val cardViewsList = mutableListOf<CardView>()
     private lateinit var tvSerie: TextView
+    private var idSerie: Int = 0
+    private var valueKg: Int = 0
+    private var valueReps: Int = 0
+    private lateinit var db: TPFitnessDB
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySerieBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        db = TPFitnessDB.initDB(this)
 
         addCVSerie()
         binding.btnAddSerie.setOnClickListener { addCVSerie() }
         binding.tvDelSerie.setOnClickListener { delSeries() }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
+        val idExtra = intent.getIntExtra("idExercise", 0)
+        binding.tvSave.setOnClickListener {
+            saveSerie(idExtra)
 
-        binding.tvSave.setOnClickListener { setCardViewSerie() }
+        }
 
 
-
+    }
+    private fun backToSession(){
+        
     }
 
     //Metodo para añadir de forma dinámica los cardviews correspondientes para las series
@@ -87,31 +104,46 @@ class SerieActivity : AppCompatActivity() {
         cardViewCounter--
 
     }
-    private fun setCardViewSerie(){
 
-        for(item in cardViewsList){
-            val cardView = item
-            val etKg = cardView.findViewById<EditText>(R.id.etKg)
-            val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
-            val etReps = cardView.findViewById<EditText>(R.id.etReps)
-            //Valores de la serie
-            val idSerie = tvSerie.text
-            val valueKg = etKg.text.toString().toInt()
-            val valueReps = etReps.text.toString().toInt()
-            Log.e("Values", idSerie.toString() + "|" + valueKg + "|" + valueReps)
+    private fun saveSerie(idExercise: Int) {
+
+        lifecycleScope.launch {
+            db.sessionDao().addSession(SessionEntity(0, "", ""))
+            val lastSession = db.sessionDao().getLastId()
+            db.exercisesSessionDao().addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
+
+
+            for (item in cardViewsList) {
+                val cardView = item
+                val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                //Valores de la serie
+                idSerie = tvSerie.text.toString().toInt()
+                valueKg = etKg.text.toString().toInt()
+                valueReps = etReps.text.toString().toInt()
+                db.seriesDao().addSerie(SeriesEntity(lastSession, idExercise, idSerie, valueKg, valueReps))
+
+                Log.e("Serie", idSerie.toString())
+                Log.e("Serie", idExercise.toString())
+
+            }
         }
 
+
     }
+
     //Se establecen las funcionesd de los botones del bottom navigation view
-    fun setFunctionItemsNavigationBar(){
-        binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
-            when (menuItem.itemId){
+    fun setFunctionItemsNavigationBar() {
+        binding.myBottomNavigation.setOnItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.itm_home -> {
-                    val intent = Intent (this, MainActivity::class.java)
+                    val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
+
                 R.id.itm_history -> {
-                    val intent = Intent (this, HistoryActivity::class.java)
+                    val intent = Intent(this, HistoryActivity::class.java)
                     startActivity(intent)
                 }
 
@@ -119,4 +151,7 @@ class SerieActivity : AppCompatActivity() {
             true
         }
     }
+    //Función para guardar las series
+
+
 }

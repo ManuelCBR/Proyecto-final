@@ -3,6 +3,7 @@ package com.manuel.tpfitness.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -24,6 +25,8 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private lateinit var adapter: ExerciseAdapter
     private lateinit var db: TPFitnessDB
     private lateinit var rv: RecyclerView
+    private var date = ""
+    var isClickEnabled= true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySessionBinding.inflate(layoutInflater)
@@ -43,6 +46,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         getExercises(db)
         setAdapter()
         setFunctionItemsNavigationBar()
+
     }
     private fun setAdapter() {
         rv = binding.rvExercise
@@ -90,10 +94,19 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private fun selectedDate(day: Int, month: Int, year: Int){
 
         val monthPlus = month+1
-        val date = "$day-$monthPlus-$year"
-        binding.etSessionName.setText(date)
+        date = "$day-$monthPlus-$year"
 
     }
+    /*private fun onItemTouchListener(){
+        binding.rvExercise.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
+            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
+                return !isClickEnabled
+            }
+            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
+
+            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) { }
+        })
+    }*/
     //Funciones para darle funcionalidad a los items del Spinner
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 
