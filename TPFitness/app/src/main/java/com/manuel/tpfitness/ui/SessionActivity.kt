@@ -26,7 +26,6 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private lateinit var db: TPFitnessDB
     private lateinit var rv: RecyclerView
     private var date = ""
-    var isClickEnabled= true
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySessionBinding.inflate(layoutInflater)
@@ -97,16 +96,6 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         date = "$day-$monthPlus-$year"
 
     }
-    /*private fun onItemTouchListener(){
-        binding.rvExercise.addOnItemTouchListener(object : RecyclerView.OnItemTouchListener {
-            override fun onInterceptTouchEvent(rv: RecyclerView, e: MotionEvent): Boolean {
-                return !isClickEnabled
-            }
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) { }
-
-            override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) { }
-        })
-    }*/
     //Funciones para darle funcionalidad a los items del Spinner
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 

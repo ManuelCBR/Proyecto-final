@@ -12,6 +12,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -43,23 +44,26 @@ class SerieActivity : AppCompatActivity() {
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
+        //Se añade el cardView dinamico para añadir series
         addCVSerie()
+        setFunctionItemsNavigationBar()
+
         binding.btnAddSerie.setOnClickListener { addCVSerie() }
         binding.tvDelSerie.setOnClickListener { delSeries() }
-        binding.iBtnBack.setOnClickListener { onBackPressed() }
+        binding.iBtnBack.setOnClickListener { onBackPressed()}
         val idExtra = intent.getIntExtra("idExercise", 0)
         binding.tvSave.setOnClickListener {
             saveSerie(idExtra)
-
+            onBackPressed()
         }
-
-
-    }
-    private fun backToSession(){
-        
     }
 
-    //Metodo para añadir de forma dinámica los cardviews correspondientes para las series
+    private fun backToSession() {
+        val intent = Intent(this, SessionActivity::class.java)
+        startActivity(intent)
+    }
+
+    //Funcion para añadir de forma dinámica los cardviews correspondientes para las series
     private fun addCVSerie() {
 
         val cardView = CardView(this)
@@ -76,6 +80,7 @@ class SerieActivity : AppCompatActivity() {
             LayoutInflater.from(this).inflate(R.layout.item_cv_series, null, false) as ViewGroup
         //Se agrega la vista al card
         cardView.addView(customCardContent)
+        //Se declara la variable serie para que se vaya incrementando cuando el usuario añada alguna más
         tvSerie = cardView.findViewById(R.id.tvCvSerie)
         tvSerie.setText((cardViewCounter + 1).toString())
         //Se agrega la card al container (layout)
@@ -83,6 +88,7 @@ class SerieActivity : AppCompatActivity() {
         cardContainer.addView(cardView)
         cardViewsList.add(cardView)
 
+        //Se suma uno al contador para incrementar la id del cardVIew
         cardViewCounter++
         cardView.id
 
@@ -91,10 +97,10 @@ class SerieActivity : AppCompatActivity() {
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
         }
-        setFunctionItemsNavigationBar()
 
     }
 
+    //Funcion para eliminar las series mientras el usuario esta rellenandolas
     private fun delSeries() {
         val childCount = cardContainer.childCount
         if (childCount > 0) {
@@ -105,34 +111,63 @@ class SerieActivity : AppCompatActivity() {
 
     }
 
-    private fun saveSerie(idExercise: Int) {
+    //Funcion para gaurdar las series
+    private fun saveSerie (idExercise: Int) {
 
         lifecycleScope.launch {
-            db.sessionDao().addSession(SessionEntity(0, "", ""))
-            val lastSession = db.sessionDao().getLastId()
-            db.exercisesSessionDao().addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
 
+            MainActivity.origin = "fromSerie"
+            if(MainActivity.origin == "session") {
+                //Se guarda una sesion y se almacena con el ultimo id en la tabla compuesta
 
+                db.sessionDao().addSession(SessionEntity(0, "", ""))
+                val lastSession = db.sessionDao().getLastId()
+                db.exercisesSessionDao()
+                    .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
+            }else if (MainActivity.origin == "fromSerie"){
+                val lastSession = db.sessionDao().getLastId()
+                db.exercisesSessionDao()
+                .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))}
+
+            //Se establece una variable bandera para verificar los campos de las series
+            var error = false
+
+            //Se recorre el listado de series para verificar si se han introducido los campos
             for (item in cardViewsList) {
                 val cardView = item
                 val etKg = cardView.findViewById<EditText>(R.id.etKg)
-                val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
                 val etReps = cardView.findViewById<EditText>(R.id.etReps)
-                //Valores de la serie
-                idSerie = tvSerie.text.toString().toInt()
-                valueKg = etKg.text.toString().toInt()
-                valueReps = etReps.text.toString().toInt()
-                db.seriesDao().addSerie(SeriesEntity(lastSession, idExercise, idSerie, valueKg, valueReps))
+                //Se controla el error en caso de que haya algún campo no introducido
+                if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
+                    error = true
+                    Toast.makeText(
+                        this@SerieActivity,
+                        "Debes rellenar todas las series",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    break
+                }
+            }
+            //En caso de que no haya errores, se guarda en la bbdd la info de las series elegidas
+            if(!error){
+                val lastSession = db.sessionDao().getLastId()
+                for (item in cardViewsList) {
+                    val cardView = item
+                    val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                    val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                    val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                    idSerie = tvSerie.text.toString().toInt()
+                    valueKg = etKg.text.toString().toInt()
+                    valueReps = etReps.text.toString().toInt()
+                    db.seriesDao().addSerie(SeriesEntity(lastSession, idExercise, idSerie, valueKg, valueReps)
+                    )
+                }
 
-                Log.e("Serie", idSerie.toString())
-                Log.e("Serie", idExercise.toString())
 
             }
         }
 
-
     }
-
     //Se establecen las funcionesd de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar() {
         binding.myBottomNavigation.setOnItemSelectedListener { menuItem ->
@@ -141,17 +176,12 @@ class SerieActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
-
                 R.id.itm_history -> {
                     val intent = Intent(this, HistoryActivity::class.java)
                     startActivity(intent)
                 }
-
             }
             true
         }
     }
-    //Función para guardar las series
-
-
 }
