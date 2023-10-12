@@ -12,6 +12,12 @@ interface ExercisesSessionDao {
     suspend fun getExerciseSession(): MutableList<ExercisesSessionEntity>
     @Query("SELECT MAX(id_session_session) FROM ejercicios_entrenamiento")
     suspend fun getLastId(): Int
+    @Query("SELECT MAX(id_exercise_session) FROM ejercicios_entrenamiento")
+    suspend fun getLastExerciseId(): Int
+    @Query("SELECT id_exercise_session FROM ejercicios_entrenamiento")
+    suspend fun getIdExercise(): MutableList<Int>
+    @Query("SELECT id_exercise_session FROM ejercicios_entrenamiento")
+    suspend fun getIdSession(): MutableList<Int>
     @Insert
     suspend fun addExerciseSession(exerciseSession: ExercisesSessionEntity)
 

@@ -7,6 +7,7 @@ import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.manuel.tpfitness.adapter.DatePickerFragment
 import com.manuel.tpfitness.adapter.ExerciseAdapter
 import com.manuel.tpfitness.database.TPFitnessDB
 import com.manuel.tpfitness.database.entities.ExerciseMuscleEntity
+import com.manuel.tpfitness.database.entities.SessionEntity
 import com.manuel.tpfitness.databinding.ActivitySessionBinding
 import kotlinx.coroutines.launch
 import java.time.LocalDate
@@ -42,6 +44,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             adapterSpinner.add("Todos los Grupos Musculares")
             adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
         }
+        binding.tvSave.setOnClickListener { saveSession() }
         getExercises(db)
         setAdapter()
         setFunctionItemsNavigationBar()
@@ -90,10 +93,25 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         val datePicker = DatePickerFragment {day, month, year -> selectedDate(day, month, year)}
         datePicker.show(supportFragmentManager, "datePicker")
     }
-    private fun selectedDate(day: Int, month: Int, year: Int){
+    private fun saveSession(){
+        lifecycleScope.launch {
+            val lastSession = db.sessionDao().getLastId()
+            val nameSession = binding.etSessionName.text.toString()
+            if(nameSession == ""){
+                Toast.makeText(this@SessionActivity, "Introduce un nombre para la sesión", Toast.LENGTH_SHORT).show()
+            }else {
+                db.sessionDao().updateSession(SessionEntity(lastSession, nameSession, date))
+                Toast.makeText(this@SessionActivity, "Sesión guardada", Toast.LENGTH_SHORT).show()
+                onBackPressed()
+            }
+        }
+    }
+    private fun selectedDate(day: Int, month: Int, year: Int): String{
 
         val monthPlus = month+1
         date = "$day-$monthPlus-$year"
+
+        return date
 
     }
     //Funciones para darle funcionalidad a los items del Spinner

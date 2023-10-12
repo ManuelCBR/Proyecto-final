@@ -3,8 +3,6 @@ package com.manuel.tpfitness.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.InputType
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +13,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.convertTo
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.LifecycleCoroutineScope
 import androidx.lifecycle.lifecycleScope
@@ -36,6 +35,7 @@ class SerieActivity : AppCompatActivity() {
     private var valueKg: Int = 0
     private var valueReps: Int = 0
     private lateinit var db: TPFitnessDB
+    private var error = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,11 +50,11 @@ class SerieActivity : AppCompatActivity() {
 
         binding.btnAddSerie.setOnClickListener { addCVSerie() }
         binding.tvDelSerie.setOnClickListener { delSeries() }
-        binding.iBtnBack.setOnClickListener { onBackPressed()}
+        binding.iBtnBack.setOnClickListener { onBackPressed() }
         val idExtra = intent.getIntExtra("idExercise", 0)
         binding.tvSave.setOnClickListener {
             saveSerie(idExtra)
-            onBackPressed()
+
         }
     }
 
@@ -107,67 +107,81 @@ class SerieActivity : AppCompatActivity() {
             val lastChild = cardContainer.getChildAt(childCount - 1)
             if (lastChild is CardView) cardContainer.removeView(lastChild)
         }
+        /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
+        añadir alguna mas despues de haberlas borrado*/
         cardViewCounter--
 
     }
 
     //Funcion para gaurdar las series
-    private fun saveSerie (idExercise: Int) {
+    private fun saveSerie(idExercise: Int) {
 
         lifecycleScope.launch {
-
-            MainActivity.origin = "fromSerie"
-            if(MainActivity.origin == "session") {
-                //Se guarda una sesion y se almacena con el ultimo id en la tabla compuesta
-
-                db.sessionDao().addSession(SessionEntity(0, "", ""))
-                val lastSession = db.sessionDao().getLastId()
-                db.exercisesSessionDao()
-                    .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
-            }else if (MainActivity.origin == "fromSerie"){
-                val lastSession = db.sessionDao().getLastId()
-                db.exercisesSessionDao()
-                .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))}
-
-            //Se establece una variable bandera para verificar los campos de las series
-            var error = false
-
-            //Se recorre el listado de series para verificar si se han introducido los campos
-            for (item in cardViewsList) {
-                val cardView = item
-                val etKg = cardView.findViewById<EditText>(R.id.etKg)
-                val etReps = cardView.findViewById<EditText>(R.id.etReps)
-                //Se controla el error en caso de que haya algún campo no introducido
-                if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
-                    error = true
-                    Toast.makeText(
-                        this@SerieActivity,
-                        "Debes rellenar todas las series",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    break
+            /*Se establece un condicional con la bandera origin para saber si esta peticion viene
+            de la pantalla principal o del guardar ya una serie, ya que tienen comportamientos
+            Diferentes*/
+                if (MainActivity.origin == "exercises") {
+                    /*Si viene de la pantalla principal, se guarda una sesion y se almacena con el
+                    ultimo id en la tabla compuesta*/
+                    db.sessionDao().addSession(SessionEntity(0, "", ""))
+                    val lastSession = db.sessionDao().getLastId()
+                    db.exercisesSessionDao()
+                        .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
+                    //Si viene de haber guardado una serie, se almacena en la ultima sesion
+                } else if (MainActivity.origin == "fromSerie" && db.exercisesSessionDao()
+                        .getLastExerciseId() != idExercise
+                ) {
+                    val lastSession = db.sessionDao().getLastId()
+                        db.exercisesSessionDao()
+                            .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
                 }
-            }
-            //En caso de que no haya errores, se guarda en la bbdd la info de las series elegidas
-            if(!error){
-                val lastSession = db.sessionDao().getLastId()
+                //Se establece una variable bandera para verificar los campos de las series
+                //Se recorre el listado de series para verificar si se han introducido los campos
                 for (item in cardViewsList) {
-                    val cardView = item
-                    val etKg = cardView.findViewById<EditText>(R.id.etKg)
-                    val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
-                    val etReps = cardView.findViewById<EditText>(R.id.etReps)
-                    idSerie = tvSerie.text.toString().toInt()
-                    valueKg = etKg.text.toString().toInt()
-                    valueReps = etReps.text.toString().toInt()
-                    db.seriesDao().addSerie(SeriesEntity(lastSession, idExercise, idSerie, valueKg, valueReps)
-                    )
+                    val etKg = item.findViewById<EditText>(R.id.etKg)
+                    val etReps = item.findViewById<EditText>(R.id.etReps)
+                    //Se controla el error en caso de que haya algún campo no introducido
+                    if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
+                        //db.exercisesSessionDao().delExerciseSession(lastSession)
+                        Toast.makeText(
+                            this@SerieActivity,
+                            "Debes rellenar todas las series",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        error = true
+                        break
+
+                    }
+                }
+                //En caso de que no haya errores, se guarda en la bbdd la info de las series elegidas
+                if (!error) {
+                    val lastSession = db.sessionDao().getLastId()
+                    for (item in cardViewsList) {
+                        val cardView = item
+                        val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                        val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                        val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                        idSerie = tvSerie.text.toString().toInt()
+                        valueKg = etKg.text.toString().toInt()
+                        valueReps = etReps.text.toString().toInt()
+                        db.seriesDao().addSerie(
+                            SeriesEntity(
+                                lastSession,
+                                idExercise,
+                                idSerie,
+                                valueKg,
+                                valueReps
+                            )
+                        )
+                    }
+                    onBackPressed()
                 }
 
-
-            }
+            //Se cambia la bandera para que sepa que ya ha pasado por una serie inicial
+            MainActivity.origin = "fromSerie"
         }
-
     }
+
     //Se establecen las funcionesd de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar() {
         binding.myBottomNavigation.setOnItemSelectedListener { menuItem ->
@@ -176,6 +190,7 @@ class SerieActivity : AppCompatActivity() {
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                 }
+
                 R.id.itm_history -> {
                     val intent = Intent(this, HistoryActivity::class.java)
                     startActivity(intent)

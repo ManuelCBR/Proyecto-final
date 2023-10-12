@@ -149,7 +149,6 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                     ).show()
                 }
             }
-
         }
         goToExerciseList()
 
