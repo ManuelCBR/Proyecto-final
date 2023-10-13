@@ -3,6 +3,7 @@ package com.manuel.tpfitness.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.View
 import android.widget.AdapterView
@@ -40,21 +41,25 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         binding.spinnerMuscleGroup.onItemSelectedListener = this
         binding.iBtnBack.setOnClickListener { onBackPressed() }
         binding.icDatePicker.setOnClickListener { showDatePicker() }
+        binding.tvSave.setOnClickListener { saveSession() }
+
         lifecycleScope.launch {
             adapterSpinner.add("Todos los Grupos Musculares")
             adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
         }
-        binding.tvSave.setOnClickListener { saveSession() }
+
         getExercises(db)
         setAdapter()
         setFunctionItemsNavigationBar()
 
     }
+    //Funcino para establecer el adaptador del recycleView
     private fun setAdapter() {
         rv = binding.rvExercise
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = ExerciseAdapter(this, exerciseMuscleList)
     }
+    //Funcion para obtener los ejercicios
     private fun getExercises(room: TPFitnessDB) {
 
         lifecycleScope.launch {
@@ -71,7 +76,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             binding.rvExercise.adapter = adapter
         }
     }
-    //Se establecen las funcionesd de los botones del bottom navigation view
+    //Se establecen las funciones de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar(){
         binding.myBottomNavigation.setOnItemSelectedListener {menuItem ->
             when (menuItem.itemId){
@@ -93,19 +98,31 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         val datePicker = DatePickerFragment {day, month, year -> selectedDate(day, month, year)}
         datePicker.show(supportFragmentManager, "datePicker")
     }
+    //Funcino para guardar la sesion
     private fun saveSession(){
         lifecycleScope.launch {
+            /*Se recupera la ultima sesion guardada y el nombre que haya introducido el usuario*/
             val lastSession = db.sessionDao().getLastId()
             val nameSession = binding.etSessionName.text.toString()
+            /*Se controla que si el nombre o la fecha estan vacios que lance un Toast*/
             if(nameSession == ""){
                 Toast.makeText(this@SessionActivity, "Introduce un nombre para la sesión", Toast.LENGTH_SHORT).show()
+            }else if (date == ""){
+                Toast.makeText(this@SessionActivity, "Introduce una fecha para la sesión", Toast.LENGTH_SHORT).show()
             }else {
-                db.sessionDao().updateSession(SessionEntity(lastSession, nameSession, date))
-                Toast.makeText(this@SessionActivity, "Sesión guardada", Toast.LENGTH_SHORT).show()
-                onBackPressed()
+                /*Se controla de donde viene ya que debe sustituir la ultima sesion en caso de que haya
+                introducido algun ejercicio, si no querra decir que esta sobreescribiendo una sesion que
+                no corresponde, y lanzara un Toast*/
+                if(MainActivity.origin == "fromSerie") {
+                    db.sessionDao().updateSession(SessionEntity(lastSession, nameSession, date))
+                    Toast.makeText(this@SessionActivity, "Sesión guardada", Toast.LENGTH_SHORT)
+                        .show()
+                    onBackPressed()
+                }else{Toast.makeText(this@SessionActivity, "No has elegido ejercicios para esta sesión", Toast.LENGTH_SHORT).show()}
             }
         }
     }
+    //Funcion para seleccionar establecer la fecha del datePicker
     private fun selectedDate(day: Int, month: Int, year: Int): String{
 
         val monthPlus = month+1

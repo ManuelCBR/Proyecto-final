@@ -15,6 +15,9 @@ interface SessionDao {
 
     @Query("SELECT MAX(id_session) FROM entrenamiento")
     suspend fun getLastId(): Int
+    @Query("SELECT name_session FROM entrenamiento WHERE date=:date")
+    suspend fun sessionByDate(date: String): MutableList<String>
+
     @Insert
     suspend fun addSession(session: SessionEntity)
 
