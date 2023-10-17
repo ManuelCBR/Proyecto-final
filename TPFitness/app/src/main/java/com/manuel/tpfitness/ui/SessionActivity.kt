@@ -98,7 +98,16 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         val datePicker = DatePickerFragment {day, month, year -> selectedDate(day, month, year)}
         datePicker.show(supportFragmentManager, "datePicker")
     }
-    //Funcino para guardar la sesion
+    //Funcion para establecer la fecha del datePicker
+    private fun selectedDate(day: Int, month: Int, year: Int): String{
+
+        val monthPlus = month+1
+        date = "$day-$monthPlus-$year"
+
+        return date
+
+    }
+    //Funcion para guardar la sesion
     private fun saveSession(){
         lifecycleScope.launch {
             /*Se recupera la ultima sesion guardada y el nombre que haya introducido el usuario*/
@@ -122,15 +131,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
             }
         }
     }
-    //Funcion para seleccionar establecer la fecha del datePicker
-    private fun selectedDate(day: Int, month: Int, year: Int): String{
 
-        val monthPlus = month+1
-        date = "$day-$monthPlus-$year"
-
-        return date
-
-    }
     //Funciones para darle funcionalidad a los items del Spinner
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
 

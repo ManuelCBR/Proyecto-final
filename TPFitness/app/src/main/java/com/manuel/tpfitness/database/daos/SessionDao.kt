@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.manuel.tpfitness.database.entities.FullSession
 
 import com.manuel.tpfitness.database.entities.SessionEntity
 
@@ -15,8 +16,21 @@ interface SessionDao {
 
     @Query("SELECT MAX(id_session) FROM entrenamiento")
     suspend fun getLastId(): Int
-    @Query("SELECT name_session FROM entrenamiento WHERE date=:date")
-    suspend fun sessionByDate(date: String): MutableList<String>
+    @Query("SELECT id_session FROM entrenamiento WHERE date=:date")
+    suspend fun sessionByDate(date: String): Int
+    @Query("SELECT en.id_session, en.name_session, en.date," +
+            "ser.id_exercise as idExercise, j.name_exercise as nameExercise," +
+            " ser.id_serie as idSerie, ser.weight, ser.reps FROM ejercicios_entrenamiento as e \n" +
+            "natural join ejercicios as j\n" +
+            "natural join entrenamiento as en\n" +
+            "natural join series as ser\n" +
+            "where j.id_exercise = e.id_exercise_session\n" +
+            "and en.id_session = e.id_session_session\n" +
+            "and ser.id_session = e.id_session_session\n" +
+            "and ser.id_exercise = j.id_exercise\n" +
+            "and en.id_session=:id"
+    )
+    suspend fun getFullSession(id: Int): MutableList<FullSession>
 
     @Insert
     suspend fun addSession(session: SessionEntity)

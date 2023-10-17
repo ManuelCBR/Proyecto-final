@@ -13,7 +13,8 @@ interface SeriesDao {
 
     @Query("SELECT * FROM series")
     suspend fun getSeries(): MutableList<SeriesEntity>
-
+    @Query("SELECT * FROM series WHERE id_session=:id")
+    suspend fun getSerieById(id: Int): MutableList<SeriesEntity>
 
     @Insert
     suspend fun addSerie(series: SeriesEntity)

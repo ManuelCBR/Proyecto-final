@@ -16,6 +16,8 @@ interface ExerciseDao {
     suspend fun getExerciseById(id: Int): MutableList<ExerciseEntity>
     @Query("SELECT id_exercise FROM ejercicios WHERE Upper(name_exercise)=Upper(:name)")
     suspend fun getNameExercisesById(name: String): Int
+    @Query("SELECT name_exercise FROM ejercicios WHERE id_exercise=:id")
+    suspend fun getNameExercise(id: Int): String
 
     @Insert
     suspend fun addExercise(exercise: ExerciseEntity)

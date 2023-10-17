@@ -54,13 +54,7 @@ class SerieActivity : AppCompatActivity() {
         val idExtra = intent.getIntExtra("idExercise", 0)
         binding.tvSave.setOnClickListener {
             saveSerie(idExtra)
-
         }
-    }
-
-    private fun backToSession() {
-        val intent = Intent(this, SessionActivity::class.java)
-        startActivity(intent)
     }
 
     //Funcion para añadir de forma dinámica los cardviews correspondientes para las series
@@ -135,11 +129,10 @@ class SerieActivity : AppCompatActivity() {
                 db.exercisesSessionDao()
                     .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
             }
-            //Se establece una variable bandera para verificar los campos de las series
             //Se recorre el listado de series para verificar si se han introducido los campos
-            for (item in cardViewsList) {
-                val etKg = item.findViewById<EditText>(R.id.etKg)
-                val etReps = item.findViewById<EditText>(R.id.etReps)
+            for (field in cardViewsList) {
+                val etKg = field.findViewById<EditText>(R.id.etKg)
+                val etReps = field.findViewById<EditText>(R.id.etReps)
                 //Se controla el error en caso de que haya algún campo no introducido
                 if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
                     //db.exercisesSessionDao().delExerciseSession(lastSession)
@@ -150,7 +143,6 @@ class SerieActivity : AppCompatActivity() {
                     ).show()
                     error = true
                     break
-
                 }
             }
             //En caso de que no haya errores, se guarda en la bbdd la info de las series elegidas

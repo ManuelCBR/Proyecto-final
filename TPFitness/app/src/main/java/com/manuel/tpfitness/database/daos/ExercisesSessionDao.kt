@@ -10,6 +10,9 @@ import com.manuel.tpfitness.database.entities.ExercisesSessionEntity
 interface ExercisesSessionDao {
     @Query("SELECT * FROM ejercicios_entrenamiento")
     suspend fun getExerciseSession(): MutableList<ExercisesSessionEntity>
+    @Query("SELECT id_exercise_session FROM ejercicios_entrenamiento WHERE id_session_session=:id")
+    suspend fun getNumExerciseByIdSession(id: Int): MutableList<Int>
+
     @Query("SELECT MAX(id_session_session) FROM ejercicios_entrenamiento")
     suspend fun getLastId(): Int
     @Query("SELECT MAX(id_exercise_session) FROM ejercicios_entrenamiento")

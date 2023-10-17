@@ -9,12 +9,6 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "series",
     primaryKeys = ["id_session", "id_exercise", "id_serie"],
-    /*indices = [
-        Index(value = ["id_session"]),
-        Index(value = ["id_exercise"]),
-        Index(value = ["id_serie"])
-    ],*/
-
     foreignKeys = [
 
         ForeignKey(
@@ -22,13 +16,7 @@ import androidx.room.PrimaryKey
             parentColumns = ["id_session_session", "id_exercise_session"],
             childColumns = ["id_session", "id_exercise"],
             onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE
-        ),
-        /*ForeignKey(
-            entity = ExercisesSessionEntity::class,
-            parentColumns = ["id_exercise_session"],
-            childColumns = ["id_exercise"],
-            onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE
-        )*/
+        )
     ]
 )
 data class SeriesEntity(
