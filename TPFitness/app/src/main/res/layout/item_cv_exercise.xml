@@ -32,10 +32,9 @@
                 android:paddingEnd="10dp"/>
 
             <TextView
-                android:id="@+id/tvExerciseName"
+                android:id="@+id/tvCVExerciseName"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                tools:text="Press Banca"
                 android:textStyle="bold"
                 android:gravity="start|center_vertical"
                 android:paddingStart="20dp"

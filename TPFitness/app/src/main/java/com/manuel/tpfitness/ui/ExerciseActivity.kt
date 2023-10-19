@@ -149,8 +149,8 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                     ).show()
                 }
             }
+            goToExerciseList()
         }
-        goToExerciseList()
 
     }
     private fun deleteExercise(room: TPFitnessDB, id: Int){

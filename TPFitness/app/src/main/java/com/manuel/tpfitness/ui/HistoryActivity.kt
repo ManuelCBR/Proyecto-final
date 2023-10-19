@@ -12,6 +12,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -26,9 +27,7 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHistoryBinding
     private lateinit var db: TPFitnessDB
     private var fullSessionList: MutableList<FullSession> = mutableListOf()
-    private lateinit var cardContainerSession: LinearLayout
     private var cardViewCounter = 0
-    private var cardViewCounterSession = 0
     private lateinit var tvSerie: TextView
     private var date = ""
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,18 +36,9 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
-
         binding.btnDate.setOnClickListener { showDatePicker() }
-        binding.tvEdit.setOnClickListener {
-            addCVSession("Sesión 1")
-            addCVExercise(1, "Ejercicio1")
-            addCVSeries(1, 1, 50, 10)
-            addCVSession("Sesión 2")
-            addCVExercise(2, "Ejercicio1")
-            addCVSeries(2, 1, 40, 5)
-        }
-
-
+        binding.tvDel.setOnClickListener {deleteSession(date) }
+        binding.iBtnBack.setOnClickListener { onBackPressed() }
 
         setFunctionItemsNavigationBar()
     }
@@ -56,79 +46,39 @@ class HistoryActivity : AppCompatActivity() {
     private fun showSession() {
         lifecycleScope.launch {
             var idExercise = 0
-            var idSession = 0
-            val idSessionByDate = db.sessionDao().sessionByDate(date)
 
-            fullSessionList = db.sessionDao().getFullSession(idSessionByDate)
-
+            fullSessionList = db.sessionDao().getFullSession(date)
 
             for (fullSession in fullSessionList) {
 
+                binding.tvNameSession.text = fullSession.session.nameSession
 
                 if (idExercise != fullSession.idExercise) {
 
-                        cardViewCounter++
-                        idExercise = fullSession.idExercise
-                        addCVExercise(cardViewCounterSession, fullSession.nameExercise)
-                        addCVSeries(
-                            cardViewCounter,
-                            fullSession.idSerie,
-                            fullSession.weight,
-                            fullSession.reps
-                        )
-                    } else {
-                        addCVSeries(
-                            cardViewCounter,
-                            fullSession.idSerie,
-                            fullSession.weight,
-                            fullSession.reps
-                        )
+                    cardViewCounter++
+                    idExercise = fullSession.idExercise
+                    addCVExercise(fullSession.nameExercise)
+                    addCVSeries(
+                        cardViewCounter,
+                        fullSession.idSerie,
+                        fullSession.weight,
+                        fullSession.reps
+                    )
+
+                } else {
+                    addCVSeries(
+                        cardViewCounter,
+                        fullSession.idSerie,
+                        fullSession.weight,
+                        fullSession.reps
+                    )
+
                 }
-
-
             }
         }
     }
 
-    private fun addCVSession(nameSession: String) {
-        val cvSession = CardView(this@HistoryActivity)
-        val newCVExercise = LinearLayout.LayoutParams(
-            LinearLayout.LayoutParams.MATCH_PARENT,
-            LinearLayout.LayoutParams.WRAP_CONTENT
-        )
-        newCVExercise.setMargins(0, 8, 0, 8)
-        cvSession.layoutParams = newCVExercise
-        cvSession.setCardBackgroundColor(
-            ContextCompat.getColor(
-                this@HistoryActivity,
-                R.color.background
-            )
-        )
-        cvSession.cardElevation = 0f
-
-        //Inflamos el diseño de las card desde el XML
-        val customCardContent =
-            LayoutInflater.from(this@HistoryActivity)
-                .inflate(R.layout.item_cv_session, null, false) as ViewGroup
-
-        //Se agrega la vista al card
-        cvSession.addView(customCardContent)
-        cardContainerSession = findViewById(R.id.containerSession)
-        cardContainerSession.addView(cvSession)
-        //cardViewsList.add(cvSession)
-        //Se establece el nombre del ejercicio
-        cvSession.findViewById<TextView>(R.id.tvNameSession).text = nameSession
-        cvSession.id = cardViewCounterSession
-
-
-        //Se establece un scroll
-        val scrollView = findViewById<ScrollView>(R.id.scrollSeries)
-        scrollView.post {
-            scrollView.fullScroll(View.FOCUS_DOWN)
-        }
-    }
-
-    private fun addCVExercise(cvSessionId: Int, nameExercise: String) {
+    private fun addCVExercise(nameExercise: String) {
 
         val cvExercise = CardView(this@HistoryActivity)
         val newCVExercise = LinearLayout.LayoutParams(
@@ -152,21 +102,16 @@ class HistoryActivity : AppCompatActivity() {
         cvExercise.addView(customCardContent)
 
         //Se agrega la vista al card
-        val parentCV = findViewById<CardView>(cvSessionId)
-        if (parentCV != null) {
+
             // Se encuentra el LinearLayout en el CardView padre
-            val contenExercises = parentCV.findViewById<LinearLayout>(R.id.contentSession)
+            var contenExercises = findViewById<LinearLayout>(R.id.containerSession)
             contenExercises.addView(cvExercise)
-        } else {
-            Toast.makeText(this, "No se han encontrado cardviews", Toast.LENGTH_SHORT).show()
-        }
 
-        /*val cardContainerExercise = findViewById<LinearLayout>(R.id.contentSession)
-          cardContainerExercise.addView(cvExercise)
-          //Se establece el nombre del ejercicio
-          cvExercise.findViewById<TextView>(R.id.tvExerciseName).text = nameExercise
 
-          cvExercise.id = cardViewCounter*/
+        //Se establece el nombre del ejercicio
+        cvExercise.findViewById<TextView>(R.id.tvCVExerciseName).text = nameExercise
+        cvExercise.id = cardViewCounter
+
 
     }
 
@@ -179,7 +124,6 @@ class HistoryActivity : AppCompatActivity() {
         )
         newCVserie.setMargins(0, 0, 0, 0)
         cvSerie.layoutParams = newCVserie
-        //cvSerie.id = ViewCompat.generateViewId()
         cvSerie.setCardBackgroundColor(ContextCompat.getColor(this, R.color.cards))
         //Inflamos el diseño de las card desde el XML
         val customCardContent =
@@ -205,6 +149,23 @@ class HistoryActivity : AppCompatActivity() {
             Toast.makeText(this, "No se han encontrado cardviews", Toast.LENGTH_SHORT).show()
         }
     }
+    //Funcion para eliminar una sesion
+    private fun deleteSession(date: String){
+        val alert = AlertDialog.Builder(this)
+        alert.setTitle("Alerta")
+        alert.setMessage("¿Seguro que quieres elminar esta sesión?")
+        alert.setPositiveButton("Sí"){dialog, witch ->
+            lifecycleScope.launch { db.sessionDao().delSession(date) }
+            Toast.makeText(this, "Sesión eliminada", Toast.LENGTH_SHORT).show()
+            onBackPressed()
+        }
+        alert.setNegativeButton("No"){dialog, witch ->
+
+        }
+        val dialog: AlertDialog = alert.create()
+        dialog.show()
+
+    }
 
     //Funcion para deshabilitar los EditText
     private fun disableET(cardContent: ViewGroup) {
@@ -222,7 +183,18 @@ class HistoryActivity : AppCompatActivity() {
     private fun showDatePicker() {
         val datePicker = DatePickerFragment { day, month, year ->
             selectedDate(day, month, year)
-            showSession()
+            binding.containerSession.removeAllViews()
+            lifecycleScope.launch {
+                val idDateSession = db.sessionDao().sessionByDate(date)
+                if (idDateSession>0) {
+                    showSession()
+                }else{Toast.makeText(
+                    this@HistoryActivity,
+                    "No hay entrenamientos que mostrar este día",
+                    Toast.LENGTH_SHORT
+                ).show()}
+            }
+
         }
 
         datePicker.show(supportFragmentManager, "datePicker")

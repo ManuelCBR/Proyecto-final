@@ -18,7 +18,8 @@
     <string name="kg">Kg</string>
     <string name="reps">Reps</string>
     <string name="add_serie">Añadir serie</string>
-    <string name="date">Fecha</string>
+    <string name="date">Selecciona una fecha</string>
+    <string name="delete">Eliminar</string>
 
     <!--Strings bottom sheets-->
     <string name="chest">Pectorales</string>

@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
             entity = MuscleGroupEntity::class,
             parentColumns = ["id_muscle_group"],
             childColumns = ["id_muscle_group_table"],
-            onUpdate = ForeignKey.CASCADE, onDelete = ForeignKey.CASCADE
+            onUpdate = ForeignKey.CASCADE
         )
     ]
 
