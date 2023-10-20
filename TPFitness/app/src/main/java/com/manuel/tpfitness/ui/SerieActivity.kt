@@ -35,7 +35,6 @@ class SerieActivity : AppCompatActivity() {
     private var valueKg: Int = 0
     private var valueReps: Int = 0
     private lateinit var db: TPFitnessDB
-    private var error = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -104,49 +103,54 @@ class SerieActivity : AppCompatActivity() {
         /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
         añadir alguna mas despues de haberlas borrado*/
         cardViewCounter--
+        cardViewsList.removeLast()
 
     }
 
-    //Funcion para gaurdar las series
+    //Funcion para guardar las series
     private fun saveSerie(idExercise: Int) {
 
+        var error = false
+
         lifecycleScope.launch {
-            /*Se establece un condicional con la bandera origin para saber si esta peticion viene
-            de la pantalla principal o del guardar ya una serie, ya que tienen comportamientos
-            Diferentes*/
-            if (MainActivity.origin == "exercises") {
-                /*Si viene de la pantalla principal, se guarda una sesion y se almacena con el
-                ultimo id en la tabla compuesta*/
-                db.sessionDao().addSession(SessionEntity(0, "", ""))
-                val lastSession = db.sessionDao().getLastId()
-                db.exercisesSessionDao()
-                    .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
-                //Si viene de haber guardado una serie, se almacena en la ultima sesion
-            } else if (MainActivity.origin == "fromSerie" && db.exercisesSessionDao()
-                    .getLastExerciseId() != idExercise
-            ) {
-                val lastSession = db.sessionDao().getLastId()
-                db.exercisesSessionDao()
-                    .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
-            }
+
             //Se recorre el listado de series para verificar si se han introducido los campos
             for (field in cardViewsList) {
                 val etKg = field.findViewById<EditText>(R.id.etKg)
                 val etReps = field.findViewById<EditText>(R.id.etReps)
                 //Se controla el error en caso de que haya algún campo no introducido
-                if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
-                    //db.exercisesSessionDao().delExerciseSession(lastSession)
-                    Toast.makeText(
-                        this@SerieActivity,
-                        "Debes rellenar todas las series",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                    error = true
-                    break
-                }
+                if (etKg.text.isEmpty() || etReps.text.isEmpty()) { error = true }
             }
-            //En caso de que no haya errores, se guarda en la bbdd la info de las series elegidas
-            if (!error) {
+
+            if (error){
+                Toast.makeText(
+                    this@SerieActivity,
+                    "Debes rellenar todas las series",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            //En caso de que no haya errores:
+            if(!error){
+                /*Se establece un condicional con la bandera origin para saber si esta peticion viene
+                de la pantalla principal o del guardar ya una serie, ya que tienen comportamientos
+                Diferentes*/
+                if (MainActivity.origin == "exercises") {
+                    /*Si viene de la pantalla principal, se guarda una sesion y se almacena con el
+                    ultimo id en la tabla compuesta*/
+                    db.sessionDao().addSession(SessionEntity(0, "", ""))
+                    val lastSession = db.sessionDao().getLastId()
+                    db.exercisesSessionDao()
+                        .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
+                    //Se cambia la bandera para que sepa que ya ha pasado por una serie inicial
+                    MainActivity.origin = "fromSerie"
+                    //Si viene de haber guardado una serie, se almacena en la ultima sesion
+                } else if (MainActivity.origin == "fromSerie" && db.exercisesSessionDao()
+                        .getLastExerciseId() != idExercise) {
+                    val lastSession = db.sessionDao().getLastId()
+                    db.exercisesSessionDao()
+                        .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))
+                }
+                //Se guardan en la base de datos los valores introducidos por el usuario
                 val lastSession = db.sessionDao().getLastId()
                 for (item in cardViewsList) {
                     val cardView = item
@@ -168,9 +172,6 @@ class SerieActivity : AppCompatActivity() {
                 }
                 onBackPressed()
             }
-
-            //Se cambia la bandera para que sepa que ya ha pasado por una serie inicial
-            MainActivity.origin = "fromSerie"
         }
     }
 
