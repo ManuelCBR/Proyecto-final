@@ -3,13 +3,10 @@ package com.manuel.tpfitness.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -37,12 +34,13 @@ class HistoryActivity : AppCompatActivity() {
         db = TPFitnessDB.initDB(this)
 
         binding.btnDate.setOnClickListener { showDatePicker() }
-        binding.tvDel.setOnClickListener {deleteSession(date) }
+        binding.tvDel.setOnClickListener { deleteSession(date) }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
 
         setFunctionItemsNavigationBar()
     }
 
+    //Funcion para mostrar la sesion
     private fun showSession() {
         lifecycleScope.launch {
             var idExercise = 0
@@ -78,6 +76,7 @@ class HistoryActivity : AppCompatActivity() {
         }
     }
 
+    //Funcion para añadir los ejercicios al cardview ejercicio de forma dinamica
     private fun addCVExercise(nameExercise: String) {
 
         val cvExercise = CardView(this@HistoryActivity)
@@ -101,20 +100,32 @@ class HistoryActivity : AppCompatActivity() {
                 .inflate(R.layout.item_cv_exercise, null, false) as ViewGroup
         cvExercise.addView(customCardContent)
 
-        //Se agrega la vista al card
+        // Se encuentra el LinearLayout en el CardView padre
+        var contenExercises = findViewById<LinearLayout>(R.id.containerSession)
+        contenExercises.addView(cvExercise)
+        /* Se establece un setOnClickListener para que cuando el usuario pulse un
+        cardview, pueda editarlo */
+        cvExercise.setOnClickListener {
+            val intent = Intent (this, HistoryEditActivity::class.java)
+            lifecycleScope.launch {
+                val idExercise = db.exerciseDao().getIdExercisesByName(nameExercise)
+                val idSession = db.sessionDao().sessionByDate(date)
+                intent.putExtra("idExercise", idExercise)
+                intent.putExtra("idSession", idSession)
+                startActivity(intent)
+            }
 
-            // Se encuentra el LinearLayout en el CardView padre
-            var contenExercises = findViewById<LinearLayout>(R.id.containerSession)
-            contenExercises.addView(cvExercise)
+
+
+        }
 
 
         //Se establece el nombre del ejercicio
         cvExercise.findViewById<TextView>(R.id.tvCVExerciseName).text = nameExercise
         cvExercise.id = cardViewCounter
-
-
     }
 
+    //Funcion para añadir la serires al cardview ejercicio de forma dinamica
     private fun addCVSeries(cvExerciseId: Int, idSerie: Int, kg: Int, reps: Int) {
 
         val cvSerie = CardView(this)
@@ -138,7 +149,6 @@ class HistoryActivity : AppCompatActivity() {
         val etReps = cvSerie.findViewById<EditText>(R.id.etReps)
         etKg.setText(kg.toString())
         etReps.setText(reps.toString())
-
         //Se agrega la card al container (layout)
         val parentCV = findViewById<CardView>(cvExerciseId)
         if (parentCV != null) {
@@ -149,17 +159,18 @@ class HistoryActivity : AppCompatActivity() {
             Toast.makeText(this, "No se han encontrado cardviews", Toast.LENGTH_SHORT).show()
         }
     }
+
     //Funcion para eliminar una sesion
-    private fun deleteSession(date: String){
+    private fun deleteSession(date: String) {
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Alerta")
-        alert.setMessage("¿Seguro que quieres elminar esta sesión?")
-        alert.setPositiveButton("Sí"){dialog, witch ->
+        alert.setMessage("¿Seguro que quieres eliminar esta sesión?")
+        alert.setPositiveButton("Sí") { dialog, witch ->
             lifecycleScope.launch { db.sessionDao().delSession(date) }
             Toast.makeText(this, "Sesión eliminada", Toast.LENGTH_SHORT).show()
             onBackPressed()
         }
-        alert.setNegativeButton("No"){dialog, witch ->
+        alert.setNegativeButton("No") { dialog, witch ->
 
         }
         val dialog: AlertDialog = alert.create()
@@ -186,13 +197,15 @@ class HistoryActivity : AppCompatActivity() {
             binding.containerSession.removeAllViews()
             lifecycleScope.launch {
                 val idDateSession = db.sessionDao().sessionByDate(date)
-                if (idDateSession>0) {
+                if (idDateSession > 0) {
                     showSession()
-                }else{Toast.makeText(
-                    this@HistoryActivity,
-                    "No hay entrenamientos que mostrar este día",
-                    Toast.LENGTH_SHORT
-                ).show()}
+                } else {
+                    Toast.makeText(
+                        this@HistoryActivity,
+                        "No hay entrenamientos que mostrar este día",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
             }
 
         }

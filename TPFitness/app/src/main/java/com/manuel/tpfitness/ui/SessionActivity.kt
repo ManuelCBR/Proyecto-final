@@ -26,7 +26,6 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
     private lateinit var adapter: ExerciseAdapter
     private lateinit var db: TPFitnessDB
     private lateinit var rv: RecyclerView
-    private var fullSessionList: MutableList<SessionEntity> = mutableListOf()
 
     companion object {
         var date = ""
@@ -43,10 +42,7 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         binding.spinnerMuscleGroup.adapter = adapterSpinner
         binding.spinnerMuscleGroup.onItemSelectedListener = this
         binding.iBtnBack.setOnClickListener { onBackPressed() }
-        binding.icDatePicker.setOnClickListener {
-            showDatePicker()
-
-        }
+        binding.icDatePicker.setOnClickListener {showDatePicker() }
         binding.tvSave.setOnClickListener {
             lifecycleScope.launch {
                 val isDateSession = db.sessionDao().getDatesSession()
@@ -119,15 +115,12 @@ class SessionActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener 
         }
         datePicker.show(supportFragmentManager, "datePicker")
     }
-
     //Funcion para establecer la fecha del datePicker
     private fun selectedDate(day: Int, month: Int, year: Int): String {
-
         val monthPlus = month + 1
         date = "$day-$monthPlus-$year"
 
         return date
-
     }
 
     //Funcion para guardar la sesion

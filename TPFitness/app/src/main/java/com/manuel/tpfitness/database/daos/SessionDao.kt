@@ -1,6 +1,7 @@
 package com.manuel.tpfitness.database.daos
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -46,4 +47,5 @@ interface SessionDao {
     suspend fun delSession(date: String)
     @Query("DELETE FROM entrenamiento WHERE id_session=:id")
     suspend fun delSessionById(id: Int)
+    
 }

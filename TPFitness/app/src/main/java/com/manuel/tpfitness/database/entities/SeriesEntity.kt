@@ -24,6 +24,6 @@ data class SeriesEntity(
     @ColumnInfo(name = "id_session") val idSession: Int,
     @ColumnInfo(name = "id_exercise") val idexercise: Int,
     @ColumnInfo(name = "id_serie") val idSerie: Int,
-    @ColumnInfo(name = "weight") val idWeight: Int,
-    @ColumnInfo(name = "reps") val idReps: Int
+    @ColumnInfo(name = "weight") val weight: Int,
+    @ColumnInfo(name = "reps") val reps: Int
 )

@@ -21,6 +21,8 @@ interface ExercisesSessionDao {
     suspend fun getIdExercise(): MutableList<Int>
     @Query("SELECT id_exercise_session FROM ejercicios_entrenamiento")
     suspend fun getIdSession(): MutableList<Int>
+    @Query("SELECT id_session_session FROM ejercicios_entrenamiento WHERE id_exercise_session=:id limit 1")
+    suspend fun getIdSessionByIdExercise(id: Int): Int
     @Insert
     suspend fun addExerciseSession(exerciseSession: ExercisesSessionEntity)
 

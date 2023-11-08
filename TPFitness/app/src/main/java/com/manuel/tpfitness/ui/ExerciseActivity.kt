@@ -85,10 +85,9 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         binding.tvDelete.setOnClickListener {
             val alert = AlertDialog.Builder(this)
             alert.setTitle("Alerta")
-            alert.setMessage("¿Seguro que quieres elminar el ejercicio?")
+            alert.setMessage("¿Seguro que quieres eliminar el ejercicio?")
             alert.setPositiveButton("Sí"){dialog, witch ->
                 deleteExercise(db,idExtra)
-                Toast.makeText(this, "Ejercicio Eliminado", Toast.LENGTH_SHORT).show()
             }
             alert.setNegativeButton("No"){dialog, witch ->
                 goToExerciseList()
@@ -133,7 +132,7 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             Toast.makeText(this, "Debes rellenar todos los campos", Toast.LENGTH_SHORT).show()
         }else {
             lifecycleScope.launch {
-                if (room.exerciseDao().getNameExercisesById(name) > 0) {
+                if (room.exerciseDao().getIdExercisesByName(name) > 0) {
                     Toast.makeText(
                         this@ExerciseActivity,
                         "Este ejercicio ya existe",
@@ -144,7 +143,7 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
                         .addExercise(ExerciseEntity(0, name, description, itemSelected))
                     Toast.makeText(
                         this@ExerciseActivity,
-                        "Ejercicio guardado correctmente",
+                        "Ejercicio guardado correctamente",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -153,9 +152,21 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
         }
 
     }
+    //Funcion para eliminar ejercicios
     private fun deleteExercise(room: TPFitnessDB, id: Int){
         lifecycleScope.launch {
-            room.exerciseDao().delExercise(id)
+            /* Se comprueba en la base de datos si el id del ejercicio seleccionado coincide con
+            alguno que esté incluido en alguna sesion */
+            val idExercise = room.exercisesSessionDao().getIdSessionByIdExercise(id)
+            //Si el ejercicio no existe en ninguna sesion, se puede eliminar
+            if (idExercise <= 0){
+                room.exerciseDao().delExercise(id)
+                Toast.makeText(this@ExerciseActivity, "Ejercicio Eliminado", Toast.LENGTH_SHORT).show()
+                /* Si el ejercicio esta incluido en alguna sesion, se muestra un Toast indicando que
+                no se puede eliminar por esste motivo */
+            }else{Toast.makeText(this@ExerciseActivity,
+                "Este ejercicio no se puede eliminar debido a su uso en alguna sesión",
+                Toast.LENGTH_LONG).show()}
         }
         goToExerciseList()
     }
@@ -184,7 +195,6 @@ class ExerciseActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener
             true
         }
     }
-
     override fun onItemSelected(p0: AdapterView<*>?, p1: View?, p2: Int, p3: Long) {
         itemSelected = p2
     }

@@ -8,10 +8,6 @@ import androidx.room.Index
 @Entity (
     tableName = "ejercicios_entrenamiento",
     primaryKeys = ["id_session_session", "id_exercise_session"],
-    /*indices = [
-        Index(value = ["id_session_session"]),
-        Index(value = ["id_exercise_session"])
-    ],*/
 
     foreignKeys = [
         ForeignKey(

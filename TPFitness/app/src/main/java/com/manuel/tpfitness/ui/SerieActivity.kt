@@ -45,15 +45,19 @@ class SerieActivity : AppCompatActivity() {
 
         //Se añade el cardView dinamico para añadir series
         addCVSerie()
-        setFunctionItemsNavigationBar()
+
 
         binding.btnAddSerie.setOnClickListener { addCVSerie() }
         binding.tvDelSerie.setOnClickListener { delSeries() }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
         val idExtra = intent.getIntExtra("idExercise", 0)
+        lifecycleScope.launch {
+            binding.tvExercise.text = db.exerciseDao().getNameExercise(idExtra)
+        }
         binding.tvSave.setOnClickListener {
             saveSerie(idExtra)
         }
+        setFunctionItemsNavigationBar()
     }
 
     //Funcion para añadir de forma dinámica los cardviews correspondientes para las series
@@ -112,6 +116,7 @@ class SerieActivity : AppCompatActivity() {
 
         var error = false
 
+
         lifecycleScope.launch {
 
             //Se recorre el listado de series para verificar si se han introducido los campos
@@ -119,10 +124,11 @@ class SerieActivity : AppCompatActivity() {
                 val etKg = field.findViewById<EditText>(R.id.etKg)
                 val etReps = field.findViewById<EditText>(R.id.etReps)
                 //Se controla el error en caso de que haya algún campo no introducido
-                if (etKg.text.isEmpty() || etReps.text.isEmpty()) { error = true }
+                if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
+                    error = true
+                }
             }
-
-            if (error){
+            if (error) {
                 Toast.makeText(
                     this@SerieActivity,
                     "Debes rellenar todas las series",
@@ -130,7 +136,7 @@ class SerieActivity : AppCompatActivity() {
                 ).show()
             }
             //En caso de que no haya errores:
-            if(!error){
+            if (!error) {
                 /*Se establece un condicional con la bandera origin para saber si esta peticion viene
                 de la pantalla principal o del guardar ya una serie, ya que tienen comportamientos
                 Diferentes*/
@@ -145,7 +151,8 @@ class SerieActivity : AppCompatActivity() {
                     MainActivity.origin = "fromSerie"
                     //Si viene de haber guardado una serie, se almacena en la ultima sesion
                 } else if (MainActivity.origin == "fromSerie" && db.exercisesSessionDao()
-                        .getLastExerciseId() != idExercise) {
+                        .getLastExerciseId() != idExercise
+                ) {
                     val lastSession = db.sessionDao().getLastId()
                     db.exercisesSessionDao()
                         .addExerciseSession(ExercisesSessionEntity(lastSession, idExercise))

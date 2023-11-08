@@ -25,7 +25,7 @@ import kotlinx.coroutines.withContext
     entities = [ExerciseEntity::class, MuscleGroupEntity::class, SessionEntity::class, ExercisesSessionEntity::class, SeriesEntity::class],
     version = 1
 )
-abstract class TPFitnessDB: RoomDatabase() {
+abstract class TPFitnessDB : RoomDatabase() {
     abstract fun exerciseDao(): ExerciseDao
     abstract fun muscleGroupDao(): MuscleGroupDao
     abstract fun exerciseMuscleDao(): ExerciseMuscleDao
