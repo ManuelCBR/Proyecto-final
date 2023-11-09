@@ -1,5 +1,6 @@
 package com.manuel.tpfitness.ui
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -46,7 +48,8 @@ class HistoryEditActivity : AppCompatActivity() {
         lifecycleScope.launch {
             binding.tvExercise.text = db.exerciseDao().getNameExercise(idExerciseExtra)
         }
-        binding.tvSave.setOnClickListener { updateExercise(idExerciseExtra, idSessionExtra) }
+        binding.imBtnSave.setOnClickListener { updateExercise(idExerciseExtra, idSessionExtra) }
+        binding.imBtnDelete.setOnClickListener { delExercises(idSessionExtra, idExerciseExtra) }
 
 
 
@@ -145,6 +148,22 @@ class HistoryEditActivity : AppCompatActivity() {
         cardViewCounter--
         cardViewsList.removeLast()
 
+    }
+    private fun delExercises(idSession: Int, idExercise: Int){
+        val alert = AlertDialog.Builder(this)
+        alert.setTitle("Alerta")
+        alert.setMessage("¿Seguro que quieres eliminar el ejercicio?")
+        alert.setPositiveButton("Sí"){dialog, witch ->
+            lifecycleScope.launch {
+                db.exercisesSessionDao().delExerciseSession(idSession, idExercise)
+                Toast.makeText(this@HistoryEditActivity, "Ejercicio eliminado", Toast.LENGTH_SHORT).show()
+            }
+        }
+        alert.setNegativeButton("No"){dialog, witch ->
+
+        }
+        val dialog: AlertDialog = alert.create()
+        dialog.show()
     }
     //Se establecen las funcionesd de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar() {

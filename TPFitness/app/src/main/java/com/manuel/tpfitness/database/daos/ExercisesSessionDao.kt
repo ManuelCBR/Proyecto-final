@@ -29,6 +29,6 @@ interface ExercisesSessionDao {
     @Update
     suspend fun updateExerciseSession(exerciseSession: ExercisesSessionEntity)
 
-    @Query("DELETE FROM ejercicios_entrenamiento WHERE id_session_session=:id")
-    suspend fun delExerciseSession(id: Int)
+    @Query("DELETE FROM ejercicios_entrenamiento WHERE id_session_session=:idSession AND id_exercise_session=:idExercise")
+    suspend fun delExerciseSession(idSession: Int, idExercise: Int)
 }

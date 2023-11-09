@@ -40,16 +40,25 @@
             app:layout_constraintStart_toEndOf="@+id/iBtnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tvSave"
+        <ImageButton
+            android:id="@+id/imBtnSave"
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="25dp"
-            android:gravity="center_vertical"
-            android:text="@string/save"
-            android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:layout_marginStart="30dp"
+            android:src="@drawable/ic_save"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_workout"
+            app:layout_constraintEnd_toStartOf="@id/imBtnDelete"/>
+        <ImageButton
+            android:id="@+id/imBtnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@android:color/transparent"
+            android:src="@drawable/ic_delete"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/imBtnSave"
+            app:layout_constraintEnd_toEndOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -59,9 +68,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
         android:gravity="center"
-        android:hint="Ejercicio"
         android:textColor="@color/black"
         android:textColorHint="@color/black"
+        android:hint="Ejercicio"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"

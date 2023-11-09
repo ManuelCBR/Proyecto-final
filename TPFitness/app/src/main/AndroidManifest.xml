@@ -16,7 +16,8 @@
             android:name=".ui.HistoryEditActivity"
             android:exported="false"
             android:label="@string/title_activity_history_edit"
-            android:theme="@style/Theme.TPFitness" />
+            android:theme="@style/Theme.TPFitness"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ui.HistoryActivity"
             android:exported="false"

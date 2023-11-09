@@ -1,5 +1,6 @@
 package com.manuel.tpfitness.ui
 
+import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,9 +10,11 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.cardview.widget.CardView
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.manuel.tpfitness.R
 import com.manuel.tpfitness.adapter.DatePickerFragment
@@ -33,11 +36,23 @@ class HistoryActivity : AppCompatActivity() {
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
+        binding.btnAddExercise.isVisible = false
         binding.btnDate.setOnClickListener { showDatePicker() }
-        binding.tvDel.setOnClickListener { deleteSession(date) }
+        binding.tvEdit.setOnClickListener {
+            binding.btnDate.isVisible = false
+            binding.btnAddExercise.isVisible = true
+        }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
 
         setFunctionItemsNavigationBar()
+    }
+
+    /*Funcion que sobreescribe onResume para que cuando vuelva a esta activity de haber eliminado
+    un ejercicio, se recargue la sesion con la informacion actualizada*/
+    override fun onResume() {
+        super.onResume()
+        binding.containerSession.removeAllViews()
+        showSession()
     }
 
     //Funcion para mostrar la sesion
@@ -99,7 +114,6 @@ class HistoryActivity : AppCompatActivity() {
             LayoutInflater.from(this@HistoryActivity)
                 .inflate(R.layout.item_cv_exercise, null, false) as ViewGroup
         cvExercise.addView(customCardContent)
-
         // Se encuentra el LinearLayout en el CardView padre
         var contenExercises = findViewById<LinearLayout>(R.id.containerSession)
         contenExercises.addView(cvExercise)
@@ -114,12 +128,7 @@ class HistoryActivity : AppCompatActivity() {
                 intent.putExtra("idSession", idSession)
                 startActivity(intent)
             }
-
-
-
         }
-
-
         //Se establece el nombre del ejercicio
         cvExercise.findViewById<TextView>(R.id.tvCVExerciseName).text = nameExercise
         cvExercise.id = cardViewCounter
@@ -207,9 +216,7 @@ class HistoryActivity : AppCompatActivity() {
                     ).show()
                 }
             }
-
         }
-
         datePicker.show(supportFragmentManager, "datePicker")
     }
 
