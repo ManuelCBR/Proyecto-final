@@ -35,7 +35,8 @@
             android:gravity="center_vertical"
             android:text="@string/history"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/tvEdit"
+            android:layout_marginEnd="35dp"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/iBtnBack"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,6 +50,15 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+        <ImageButton
+            android:id="@+id/imgBtnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_delete"
+            android:layout_marginEnd="25dp"
+            android:background="@android:color/transparent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

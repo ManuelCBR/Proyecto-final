@@ -16,6 +16,7 @@ import com.manuel.tpfitness.ui.MainActivity
 import com.manuel.tpfitness.ui.SerieActivity
 import androidx.lifecycle.lifecycleScope
 import com.manuel.tpfitness.database.entities.SessionEntity
+import com.manuel.tpfitness.ui.HistoryActivity
 import com.manuel.tpfitness.ui.SessionActivity
 import kotlinx.coroutines.launch
 
@@ -48,8 +49,6 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
         mostrar los campos del ejercicio */
         if (MainActivity.origin == "session") {
 
-            Log.e("date", SessionActivity.date)
-
 
                 holder.itemView.setOnClickListener {
                     val intent = Intent(holder.itemView.context, ExerciseActivity::class.java)
@@ -64,22 +63,19 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
                         exercise.muscleGroupTable.nameMuscleGroup
                     )
 
-
                     context.startActivity(intent)
                 }
 
-        }else if (MainActivity.origin == "exercises"){
-
+        }else if (MainActivity.origin == "exercises" || HistoryActivity.history == "fromHistory"){
 
                 holder.itemView.setOnClickListener {
                         val intent = Intent(holder.itemView.context, SerieActivity::class.java)
                         intent.putExtra("idExercise", exercise.exercisesTable.idExercise)
+
                         context.startActivity(intent)
 
                 }
-
         }
-
 
     }
 

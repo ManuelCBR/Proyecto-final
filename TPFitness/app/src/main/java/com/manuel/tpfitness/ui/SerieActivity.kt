@@ -1,8 +1,10 @@
 package com.manuel.tpfitness.ui
 
+import android.content.ComponentName
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -51,11 +53,19 @@ class SerieActivity : AppCompatActivity() {
         binding.tvDelSerie.setOnClickListener { delSeries() }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
         val idExtra = intent.getIntExtra("idExercise", 0)
+       // Log.e("Manuel", idExtra.toString() + "|" + idSessionExtra.toString())
         lifecycleScope.launch {
             binding.tvExercise.text = db.exerciseDao().getNameExercise(idExtra)
         }
         binding.tvSave.setOnClickListener {
-            saveSerie(idExtra)
+
+            if (HistoryActivity.history == ""){
+                saveSerie(idExtra)
+            } else if (HistoryActivity.history == "fromHistory"){
+                addNewExerciseFromHistory(HistoryActivity.idSession, idExtra)
+                HistoryActivity.history == ""
+            }
+
         }
         setFunctionItemsNavigationBar()
     }
@@ -115,8 +125,6 @@ class SerieActivity : AppCompatActivity() {
     private fun saveSerie(idExercise: Int) {
 
         var error = false
-
-
         lifecycleScope.launch {
 
             //Se recorre el listado de series para verificar si se han introducido los campos
@@ -181,8 +189,54 @@ class SerieActivity : AppCompatActivity() {
             }
         }
     }
+    //funcion para agregar ejercicios y series desde el historial
+    private fun addNewExerciseFromHistory(idSession: Int, idExercise: Int){
+        var error = false
+        lifecycleScope.launch {
 
-    //Se establecen las funcionesd de los botones del bottom navigation view
+            //Se recorre el listado de series para verificar si se han introducido los campos
+            for (field in cardViewsList) {
+                val etKg = field.findViewById<EditText>(R.id.etKg)
+                val etReps = field.findViewById<EditText>(R.id.etReps)
+                //Se controla el error en caso de que haya algún campo no introducido
+                if (etKg.text.isEmpty() || etReps.text.isEmpty()) {
+                    error = true
+                }
+            }
+            if (error) {
+                Toast.makeText(
+                    this@SerieActivity,
+                    "Debes rellenar todas las series",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+            if (!error) {
+                db.exercisesSessionDao().addExerciseSession(ExercisesSessionEntity(idSession, idExercise))
+                for (item in cardViewsList) {
+                    val cardView = item
+                    val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                    val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                    val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                    idSerie = tvSerie.text.toString().toInt()
+                    valueKg = etKg.text.toString().toInt()
+                    valueReps = etReps.text.toString().toInt()
+                    db.seriesDao().addSerie(
+                        SeriesEntity(
+                            idSession,
+                            idExercise,
+                            idSerie,
+                            valueKg,
+                            valueReps
+                        )
+                    )
+                }
+                onBackPressed()
+            }
+        }
+
+    }
+
+    //Se establecen las funciones de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar() {
         binding.myBottomNavigation.setOnItemSelectedListener { menuItem ->
             when (menuItem.itemId) {

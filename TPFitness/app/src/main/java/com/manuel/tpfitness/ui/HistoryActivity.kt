@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.EditText
@@ -30,6 +31,11 @@ class HistoryActivity : AppCompatActivity() {
     private var cardViewCounter = 0
     private lateinit var tvSerie: TextView
     private var date = ""
+    companion object{
+        var history = ""
+        var idSession = 0
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHistoryBinding.inflate(layoutInflater)
@@ -37,13 +43,25 @@ class HistoryActivity : AppCompatActivity() {
         db = TPFitnessDB.initDB(this)
 
         binding.btnAddExercise.isVisible = false
+        binding.imgBtnDelete.isVisible = false
+        if(date == "") binding.tvEdit.isVisible = false
         binding.btnDate.setOnClickListener { showDatePicker() }
         binding.tvEdit.setOnClickListener {
             binding.btnDate.isVisible = false
+            binding.tvEdit.isVisible = false
             binding.btnAddExercise.isVisible = true
+            binding.imgBtnDelete.isVisible = true
         }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
-
+        binding.imgBtnDelete.setOnClickListener { deleteSession(date) }
+        binding.btnAddExercise.setOnClickListener{
+            history = "fromHistory"
+            lifecycleScope.launch {
+                val intent = Intent (this@HistoryActivity, ExerciseListActivity::class.java)
+                idSession = db.sessionDao().sessionByDate(date)
+                startActivity(intent)
+            }
+        }
         setFunctionItemsNavigationBar()
     }
 
@@ -108,7 +126,6 @@ class HistoryActivity : AppCompatActivity() {
             )
         )
         cvExercise.cardElevation = 0f
-
         //Inflamos el diseño de las card desde el XML
         val customCardContent =
             LayoutInflater.from(this@HistoryActivity)
@@ -207,6 +224,7 @@ class HistoryActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 val idDateSession = db.sessionDao().sessionByDate(date)
                 if (idDateSession > 0) {
+                    binding.tvEdit.isVisible = true
                     showSession()
                 } else {
                     Toast.makeText(

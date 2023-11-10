@@ -3,6 +3,7 @@ package com.manuel.tpfitness.ui
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -39,6 +40,8 @@ class ExerciseListActivity : AppCompatActivity(), AdapterView.OnItemSelectedList
             adapterSpinner.add("Todos los Grupos Musculares")
             adapterSpinner.addAll(db.exerciseMuscleDao().getNameMuscleGroup())
         }
+        var idSessionExtra = intent.getIntExtra("idSession", 0)
+
         getExercises(db)
         setAdapter()
         setFunctionItemsNavigationBar()
