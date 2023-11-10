@@ -51,8 +51,6 @@ class HistoryEditActivity : AppCompatActivity() {
         binding.imBtnSave.setOnClickListener { updateExercise(idExerciseExtra, idSessionExtra) }
         binding.imBtnDelete.setOnClickListener { delExercises(idSessionExtra, idExerciseExtra) }
 
-
-
         setFunctionItemsNavigationBar()
     }
     //Funcion para añadir de forma dinámica los cardviews correspondientes para las series
@@ -157,6 +155,7 @@ class HistoryEditActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 db.exercisesSessionDao().delExerciseSession(idSession, idExercise)
                 Toast.makeText(this@HistoryEditActivity, "Ejercicio eliminado", Toast.LENGTH_SHORT).show()
+                onBackPressed()
             }
         }
         alert.setNegativeButton("No"){dialog, witch ->

@@ -57,7 +57,7 @@ class HistoryActivity : AppCompatActivity() {
         binding.btnAddExercise.setOnClickListener{
             history = "fromHistory"
             lifecycleScope.launch {
-                val intent = Intent (this@HistoryActivity, ExerciseListActivity::class.java)
+                val intent = Intent (this@HistoryActivity, ExerciseListFromHistory::class.java)
                 idSession = db.sessionDao().sessionByDate(date)
                 startActivity(intent)
             }

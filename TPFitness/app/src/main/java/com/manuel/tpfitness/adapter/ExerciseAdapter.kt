@@ -76,9 +76,7 @@ class ExerciseAdapter(var context: Context, var exerciseList: MutableList<Exerci
 
                 }
         }
-
     }
-
     override fun getItemCount(): Int {
         return exerciseList.size
     }
