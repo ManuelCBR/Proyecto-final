@@ -109,11 +109,12 @@ class SerieActivity : AppCompatActivity() {
         if (childCount > 0) {
             val lastChild = cardContainer.getChildAt(childCount - 1)
             if (lastChild is CardView) cardContainer.removeView(lastChild)
-        }
-        /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
+            /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
         añadir alguna mas despues de haberlas borrado*/
-        cardViewCounter--
-        cardViewsList.removeLast()
+            cardViewCounter--
+            cardViewsList.removeLast()
+        } else {Toast.makeText(this, "No hay series que eliminar", Toast.LENGTH_SHORT).show()}
+
     }
 
     //Funcion para guardar las series
@@ -138,7 +139,7 @@ class SerieActivity : AppCompatActivity() {
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            //En caso de que no haya errores:
+            //En caso de que no haya errores
             if (!error) {
                 /*Se establece un condicional con la bandera origin para saber si esta peticion viene
                 de la pantalla principal o del guardar ya una serie, ya que tienen comportamientos

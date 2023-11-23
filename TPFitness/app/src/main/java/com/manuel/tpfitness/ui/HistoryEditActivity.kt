@@ -40,19 +40,38 @@ class HistoryEditActivity : AppCompatActivity() {
         setContentView(binding.root)
         db = TPFitnessDB.initDB(this)
 
-        binding.btnAddSerie.setOnClickListener { addCVSerie() }
-        binding.tvDelSerie.setOnClickListener { delSeries() }
-        binding.iBtnBack.setOnClickListener { onBackPressed() }
         val idExerciseExtra = intent.getIntExtra("idExercise", 0)
         val idSessionExtra = intent.getIntExtra("idSession", 0)
+        binding.btnAddSerie.setOnClickListener { addCVSerie() }
+        binding.tvDelSerie.setOnClickListener { delSeries(idSessionExtra, idExerciseExtra) }
+        binding.iBtnBack.setOnClickListener { onBackPressed() }
+
         lifecycleScope.launch {
             binding.tvExercise.text = db.exerciseDao().getNameExercise(idExerciseExtra)
+            fillCVSeries(idSessionExtra, idExerciseExtra)
         }
         binding.imBtnSave.setOnClickListener { updateExercise(idExerciseExtra, idSessionExtra) }
         binding.imBtnDelete.setOnClickListener { delExercises(idSessionExtra, idExerciseExtra) }
 
         setFunctionItemsNavigationBar()
     }
+
+    private fun fillCVSeries(idSession: Int, idExercise: Int) {
+        lifecycleScope.launch {
+
+            var seriesList = db.seriesDao().getSerieByIdSessionExercise(idSession, idExercise)
+            for (serie in seriesList) {
+                addCVSerie()
+                var cardSerie = cardViewsList.get(cardViewCounter - 1)
+                val etKg = cardSerie.findViewById<EditText>(R.id.etKg)
+                val etReps = cardSerie.findViewById<EditText>(R.id.etReps)
+
+                etKg.setText(serie.weight.toString())
+                etReps.setText(serie.reps.toString())
+            }
+        }
+    }
+
     //Funcion para añadir de forma dinámica los cardviews correspondientes para las series
     private fun addCVSerie() {
 
@@ -73,24 +92,26 @@ class HistoryEditActivity : AppCompatActivity() {
         //Se declara la variable serie para que se vaya incrementando cuando el usuario añada alguna más
         tvSerie = cardView.findViewById(R.id.tvCvSerie)
         tvSerie.setText((cardViewCounter + 1).toString())
+        val etKg = cardView.findViewById<EditText>(R.id.etKg)
+        val etReps = cardView.findViewById<EditText>(R.id.etReps)
+        etKg.setText("0")
+        etReps.setText("0")
         //Se agrega la card al container (layout)
         cardContainer = findViewById(R.id.containerSeries)
         cardContainer.addView(cardView)
         cardViewsList.add(cardView)
-
         //Se suma uno al contador para incrementar la id del cardVIew
         cardViewCounter++
         cardView.id
-
         //Se establece un scroll
         val scrollView = findViewById<ScrollView>(R.id.scrollSeries)
         scrollView.post {
             scrollView.fullScroll(View.FOCUS_DOWN)
         }
-
     }
+
     //Funcion para actualizar el ejercicio
-    private fun updateExercise (idExercise: Int, idSession: Int){
+    private fun updateExercise(idExercise: Int, idSession: Int) {
         var error = false
         //Se recorre el listado de series para verificar si se han introducido los campos
         for (field in cardViewsList) {
@@ -101,69 +122,107 @@ class HistoryEditActivity : AppCompatActivity() {
                 error = true
             }
         }
-        if (error){
+        if (error) {
             Toast.makeText(
                 this@HistoryEditActivity,
                 "Debes rellenar todas las series",
                 Toast.LENGTH_SHORT
             ).show()
         }
-        if(!error){
-            //Se actualizan los valores con lso que ha introducido el usuario
-            for (item in cardViewsList) {
-                val cardView = item
-                val etKg = cardView.findViewById<EditText>(R.id.etKg)
-                val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
-                val etReps = cardView.findViewById<EditText>(R.id.etReps)
-                idSerie = tvSerie.text.toString().toInt()
-                valueKg = etKg.text.toString().toInt()
-                valueReps = etReps.text.toString().toInt()
-                lifecycleScope.launch {
-                    db.seriesDao().updateSerie(
-                        SeriesEntity(
-                            idSession,
-                            idExercise,
-                            idSerie,
-                            valueKg,
-                            valueReps
+        if (!error) {
+            lifecycleScope.launch {
+                val idSerieCV = db.seriesDao().getSerieBySessionExercise(idSession, idExercise)
+                //Se actualizan los valores con los que ha introducido el usuario
+                for (item in cardViewsList) {
+                    val cardView = item
+                    val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                    val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                    val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                    idSerie = tvSerie.text.toString().toInt()
+                    valueKg = etKg.text.toString().toInt()
+                    valueReps = etReps.text.toString().toInt()
+                    if (idSerieCV.contains(idSerie)) {
+                        db.seriesDao().updateSerie(
+                            SeriesEntity(
+                                idSession,
+                                idExercise,
+                                idSerie,
+                                valueKg,
+                                valueReps
+                            )
                         )
-                    )
+                    } else {
+                        db.seriesDao().addSerie(
+                            SeriesEntity(
+                                idSession,
+                                idExercise,
+                                idSerie,
+                                valueKg,
+                                valueReps
+                            )
+                        )
+                    }
                 }
             }
             onBackPressed()
         }
     }
 
-    //Funcion para eliminar las series mientras el usuario esta rellenandolas
-    private fun delSeries() {
+    //Funcion para eliminar las series mientras el usuario esta rellenando las
+    private fun delSeries(idSession: Int, idExercise: Int) {
         val childCount = cardContainer.childCount
-        if (childCount > 0) {
-            val lastChild = cardContainer.getChildAt(childCount - 1)
-            if (lastChild is CardView) cardContainer.removeView(lastChild)
-        }
-        /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
-        añadir alguna mas despues de haberlas borrado*/
-        cardViewCounter--
-        cardViewsList.removeLast()
+        if (childCount >= 0) {
 
+                for (item in cardViewsList) {
+                    val cardView = item
+                    val etKg = cardView.findViewById<EditText>(R.id.etKg)
+                    val tvSerie = cardView.findViewById<TextView>(R.id.tvCvSerie)
+                    val etReps = cardView.findViewById<EditText>(R.id.etReps)
+                    idSerie = tvSerie.text.toString().toInt()
+                    valueKg = etKg.text.toString().toInt()
+                    valueReps = etReps.text.toString().toInt()
+
+                }
+            if (valueKg > 0) {
+                lifecycleScope.launch { db.seriesDao().delSerie(idSession, idExercise, idSerie) }
+                val lastChild = cardContainer.getChildAt(childCount - 1)
+                if (lastChild is CardView) cardContainer.removeView(lastChild)
+                /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
+                añadir alguna mas despues de haberlas borrado*/
+                cardViewCounter--
+                cardViewsList.removeLast()
+            } else {
+                val lastChild = cardContainer.getChildAt(childCount - 1)
+                if (lastChild is CardView) cardContainer.removeView(lastChild)
+                /*Se resta 1 para que el numero de serie siga siendo el mismo si al usuario le da por
+                añadir alguna mas despues de haberlas borrado*/
+                cardViewCounter--
+                cardViewsList.removeLast()
+            }
+        } else {
+            Toast.makeText(this, "No hay series que eliminar", Toast.LENGTH_SHORT).show()
+        }
     }
-    private fun delExercises(idSession: Int, idExercise: Int){
+
+    private fun delExercises(idSession: Int, idExercise: Int) {
         val alert = AlertDialog.Builder(this)
         alert.setTitle("Alerta")
         alert.setMessage("¿Seguro que quieres eliminar el ejercicio?")
-        alert.setPositiveButton("Sí"){dialog, witch ->
+        alert.setPositiveButton("Sí") { dialog, witch ->
             lifecycleScope.launch {
                 db.exercisesSessionDao().delExerciseSession(idSession, idExercise)
-                Toast.makeText(this@HistoryEditActivity, "Ejercicio eliminado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@HistoryEditActivity, "Ejercicio eliminado", Toast.LENGTH_SHORT)
+                    .show()
                 onBackPressed()
             }
         }
-        alert.setNegativeButton("No"){dialog, witch ->
+        alert.setNegativeButton("No") { dialog, witch ->
 
         }
         val dialog: AlertDialog = alert.create()
         dialog.show()
     }
+
     //Se establecen las funcionesd de los botones del bottom navigation view
     fun setFunctionItemsNavigationBar() {
         binding.myBottomNavigation.setOnItemSelectedListener { menuItem ->

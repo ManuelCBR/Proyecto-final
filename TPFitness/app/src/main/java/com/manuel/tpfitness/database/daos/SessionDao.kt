@@ -33,7 +33,7 @@ interface SessionDao {
             "and en.id_session = e.id_session_session\n" +
             "and ser.id_session = e.id_session_session\n" +
             "and ser.id_exercise = j.id_exercise\n" +
-            "and en.date=:date /*ORDER BY id_session, id_exercise, id_serie*/"
+            "and en.date=:date ORDER BY id_session, id_exercise, id_serie"
     )
     suspend fun getFullSession(date: String): MutableList<FullSession>
 

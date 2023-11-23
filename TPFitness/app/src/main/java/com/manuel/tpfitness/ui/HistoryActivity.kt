@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -29,9 +30,11 @@ class HistoryActivity : AppCompatActivity() {
     private lateinit var db: TPFitnessDB
     private var fullSessionList: MutableList<FullSession> = mutableListOf()
     private var cardViewCounter = 0
+    private var idExercise = 0
     private lateinit var tvSerie: TextView
     private var date = ""
-    companion object{
+
+    companion object {
         var history = ""
         var idSession = 0
     }
@@ -44,7 +47,7 @@ class HistoryActivity : AppCompatActivity() {
 
         binding.btnAddExercise.isVisible = false
         binding.imgBtnDelete.isVisible = false
-        if(date == "") binding.tvEdit.isVisible = false
+        if (date == "") binding.tvEdit.isVisible = false
         binding.btnDate.setOnClickListener { showDatePicker() }
         binding.tvEdit.setOnClickListener {
             binding.btnDate.isVisible = false
@@ -54,10 +57,10 @@ class HistoryActivity : AppCompatActivity() {
         }
         binding.iBtnBack.setOnClickListener { onBackPressed() }
         binding.imgBtnDelete.setOnClickListener { deleteSession(date) }
-        binding.btnAddExercise.setOnClickListener{
+        binding.btnAddExercise.setOnClickListener {
             history = "fromHistory"
             lifecycleScope.launch {
-                val intent = Intent (this@HistoryActivity, ExerciseListFromHistory::class.java)
+                val intent = Intent(this@HistoryActivity, ExerciseListFromHistory::class.java)
                 idSession = db.sessionDao().sessionByDate(date)
                 startActivity(intent)
             }
@@ -76,10 +79,8 @@ class HistoryActivity : AppCompatActivity() {
     //Funcion para mostrar la sesion
     private fun showSession() {
         lifecycleScope.launch {
-            var idExercise = 0
 
             fullSessionList = db.sessionDao().getFullSession(date)
-
             for (fullSession in fullSessionList) {
 
                 binding.tvNameSession.text = fullSession.session.nameSession
@@ -103,7 +104,6 @@ class HistoryActivity : AppCompatActivity() {
                         fullSession.weight,
                         fullSession.reps
                     )
-
                 }
             }
         }
@@ -137,7 +137,7 @@ class HistoryActivity : AppCompatActivity() {
         /* Se establece un setOnClickListener para que cuando el usuario pulse un
         cardview, pueda editarlo */
         cvExercise.setOnClickListener {
-            val intent = Intent (this, HistoryEditActivity::class.java)
+            val intent = Intent(this, HistoryEditActivity::class.java)
             lifecycleScope.launch {
                 val idExercise = db.exerciseDao().getIdExercisesByName(nameExercise)
                 val idSession = db.sessionDao().sessionByDate(date)
@@ -177,6 +177,7 @@ class HistoryActivity : AppCompatActivity() {
         etReps.setText(reps.toString())
         //Se agrega la card al container (layout)
         val parentCV = findViewById<CardView>(cvExerciseId)
+
         if (parentCV != null) {
             // Se encuentra el LinearLayout en el CardView padre
             val contenSeries = parentCV.findViewById<LinearLayout>(R.id.contentSeries)
