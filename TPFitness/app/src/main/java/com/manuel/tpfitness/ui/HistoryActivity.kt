@@ -58,6 +58,7 @@ class HistoryActivity : AppCompatActivity() {
         binding.iBtnBack.setOnClickListener { onBackPressed() }
         binding.imgBtnDelete.setOnClickListener { deleteSession(date) }
         binding.btnAddExercise.setOnClickListener {
+            MainActivity.origin = ""
             history = "fromHistory"
             lifecycleScope.launch {
                 val intent = Intent(this@HistoryActivity, ExerciseListFromHistory::class.java)
